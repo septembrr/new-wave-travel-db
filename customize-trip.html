@@ -2,7 +2,7 @@
 <head>
     <meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trips</title>
+    <title>Customize Trip</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
@@ -33,8 +33,8 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Trips<span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li class="active"><a href="trips.html">Browse Trips</a></li>
-                        <li><a href="customize-trip.html">Add Trip</a></li>
+                        <li><a href="trips.html">Browse Trips</a></li>
+                        <li class="active"><a href="customize-trip.html">Add Trip</a></li>
                     </ul>
                 </li>
                 <li class="dropdown">
@@ -50,19 +50,61 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-12">
-                <h1>Trips</h1>
-                <p>Welcome to the trips portal! See what trips are upcoming and filter by feature.</p>
+                <h1>Add Trip</h1>
+                <p>Add a new trip below.</p>
                 <br>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-3">
-                <br>
-                <form action="trips.html" method="get">
-                    <div class="form-group">
-                        <h4>Filter by Feature</h4>
+            <div class="col-md-12">
+                <form action="#" method="get">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="sr-only" for="title">Title</label>
+                                <input type="text" id="title" name="title" class="form-control" placeholder="Title*" required />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="sr-only" for="city">City</label>
+                                <input type="text" id="city" name="city" class="form-control" placeholder="City*" required />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="sr-only" for="country">Country</label>
+                                <input type="text" id="country" name="country" class="form-control" placeholder="Country*" required />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-addon">$</div>
+                                    <input type="number" id="price" name="price" class="form-control" placeholder="Price*" required />
+                                    <div class="input-group-addon">.00</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="sr-only" for="startDate">Start Date</label>
+                                <input type="date" id="startDate" name="startDate" class="form-control" placeholder="Start Date*" required />
+                                <span class="help-block"><strong>Start Date</strong></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="sr-only" for="endDate">End Date</label>
+                                <input type="date" id="endDate" name="endDate" class="form-control" placeholder="End Date*" required />
+                                <span class="help-block"><strong>End Date</strong></span>
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group">
+                        <label>Features</label>
                         <div class="checkbox">
                             <label>
                                 <input type="checkbox" id="homestay" name="feature" value="homestay" />
@@ -82,79 +124,10 @@
                             </label>
                         </div>
                     </div>
-                    <input type="submit" name="filter" value="Filter" class="btn btn-default" />
+                    <div class="form-group">
+                        <input type="submit" name="add" value="Add" class="btn btn-primary" />
+                    </div>
                 </form>
-            </div>
-            <div class="col-md-9">
-                <h2>Trips List</h2>
-                <p>The following trips are available for students to sign up for.</p>
-                <table class="table table-hover table-striped">
-                    <thead>
-                        <tr>
-                            <th>Title</th>
-                            <th>City</th>
-                            <th>Country</th>
-                            <th>Price</th>
-                            <th>Start Date</th>
-                            <th>End Date</th>
-                            <th>Features</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Paris Art Study</td>
-                            <td>Paris</td>
-                            <td>France</td>
-                            <td>$3000</td>
-                            <td>March 3, 2020</td>
-                            <td>June 15, 2020</td>
-                            <td>Homestay</td>
-                            <td>
-                                <form action="#" method="get">
-                                    <select class="form-control">
-                                        <option value="">Select Action</option>
-                                        <option value="delete">Delete</option>
-                                    </select>
-                                </form>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Himalaya Trek</td>
-                            <td>Kathmandu</td>
-                            <td>Nepal</td>
-                            <td>$5000</td>
-                            <td>November 3, 2020</td>
-                            <td>December 15, 2020</td>
-                            <td>Outdoors</td>
-                            <td>
-                                <form action="#" method="get">
-                                    <select class="form-control">
-                                        <option value="">Select Action</option>
-                                        <option value="delete">Delete</option>
-                                    </select>
-                                </form>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Food of Italy</td>
-                            <td>Rome</td>
-                            <td>Italy</td>
-                            <td>$4500</td>
-                            <td>May 16, 2020</td>
-                            <td>July 2, 2020</td>
-                            <td>Homestay, Internship</td>
-                            <td>
-                                <form action="#" method="get">
-                                    <select class="form-control">
-                                        <option value="">Select Action</option>
-                                        <option value="delete">Delete</option>
-                                    </select>
-                                </form>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
         </div>
     </div>
