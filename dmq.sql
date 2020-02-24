@@ -89,3 +89,6 @@ UPDATE TABLE Students SET name = :name_input, university = :university_input, ph
 -- update a trip based on submission from update trip form
 UPDATE TABLE Trips SET name = :name_input, city = :city_input, country = :country_input, price = :price_input, startDate = :startDate_input, endDate = :endDate_input WHERE tripID = :tripID_input_selected;
 -- will execute the remove trip and feature association query, and then re-add the trip associations
+
+-- update a student based on a trip added from the Update Trips page
+UPDATE TABLE Students SET trip = :tripID_selected_in_trip_form WHERE studentID = :studentID_input_selected OR studentID = :studentID_input_selected_2;
