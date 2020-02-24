@@ -6,7 +6,7 @@
 SELECT Students.name, Students.university, Students.phone, Students.email, Trips.name, Staff.name 
    FROM Students
    LEFT JOIN Trips ON Students.trip = Trips.tripID
-   LEFT JOIN Staff ON Students.Staff = Staff.StaffID;
+   LEFT JOIN Staff ON Students.Staff = Staff.staffID;
 
 -- get all Staff for the Staff page
 -- also used to populate dropdown on Add or Update Student page
@@ -56,7 +56,7 @@ JOIN
 AS matching_Trips ON matching_Trips.tripID = trip_options.tripID;
 
 -- insert new student
-INSERT INTO Students(name, university, phone, email, trip, Staff) VALUES(:name_input, :university_input, :phone_input, :email_input, :tripID_input_from_dropdown, :StaffID_input_from_dropdown);
+INSERT INTO Students(name, university, phone, email, trip, staff) VALUES(:name_input, :university_input, :phone_input, :email_input, :tripID_input_from_dropdown, :StaffID_input_from_dropdown);
 
 -- insert new Trip
 INSERT INTO Trips(name, city, country, price, startDate, endDate) VALUES(:name_input, :city_input, :country_input, :price_input, :startDate_input_formatted_yyyy-mm-dd, :endDate_input_formatted_yyyy-mm-dd);
