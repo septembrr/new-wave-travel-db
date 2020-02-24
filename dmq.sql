@@ -80,10 +80,10 @@ DELETE FROM Trips WHERE tripID = :tripID_input_selected_in_form;
 
 -- remove an association of a trip and feature
 -- executed when Trips are edited and a feature is removed
-DELETE FROM Trip_Features WHERE tripID = :tripID_input_currently_editing AND featureID = :featureID_input;
+DELETE FROM Trip_Features WHERE tripID = :tripID_input_currently_editing;
 
 -- update a student based on submission from update student form
-UPDATE TABLE Students SET name = :name_input, university = :university_input, phone = :phone_input, email = :email_input, trip = :tripID_input_selected, Staff = :StaffID_input_selected);
+UPDATE TABLE Students SET name = :name_input, university = :university_input, phone = :phone_input, email = :email_input, trip = :tripID_input_selected, Staff = :StaffID_input_selected) WHERE studentID = :studentID_input_being_edited;
 -- if no trip or Staff selected, that part of the query would be left out.
 
 -- update a trip based on submission from update trip form
