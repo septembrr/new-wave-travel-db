@@ -56,7 +56,7 @@ INSERT INTO `students` VALUES
 
 DROP TABLE IF EXISTS `trips`;
 
-CREATE TABLE `students` (
+CREATE TABLE `trips` (
   `tripID` int(11) NOT NULL UNIQUE AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `city` varchar(255) NOT NULL,
