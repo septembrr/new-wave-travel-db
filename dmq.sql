@@ -13,24 +13,26 @@ SELECT Students.name, Students.university, Students.phone, Students.email, Trips
 SELECT Staff.name, Staff.phone, Staff.email, Staff.type FROM Staff;
 
 -- get all Trips, including applicable Features, for the Trips page
-SELECT Trips.name, Trips.city, Trips.country, Trips.price, Trips.startDate, Trips.endDate, Features.name 
+SELECT Trips.name, Trips.city, Trips.country, Trips.price, Trips.startDate, Trips.endDate, GROUP_CONCAT(DISTINCT Features.name) as Features
    FROM Trips
-   INNER JOIN Trip_Features ON Trips.tripID = Trip_Features.tripID
-   INNER JOIN Features ON Trip_Features.featureID = Features.featureID;
+   LEFT JOIN Trip_Features ON Trips.tripID = Trip_Features.tripID
+   LEFT JOIN Features ON Trip_Features.featureID = Features.featureID
+   GROUP BY Trips.name;
 
 -- get all Features, and their applicable Trips, for the Features page
 -- also used to populate list of Features on Browse Trips page
 -- also used to populate list on Add or Update Trips page
-SELECT Features.name, Trips.name
+SELECT Features.name, GROUP_CONCAT(DISTINCT Trips.name) as trips
     FROM Features
-    INNER JOIN Trip_Features ON Features.featureID = Trip_Features.featureID
-    INNER JOIN Trips ON Trip_Features.tripID = Trips.tripID;
+    LEFT JOIN Trip_Features ON Features.featureID = Trip_Features.featureID
+    LEFT JOIN Trips ON Trip_Features.tripID = Trips.tripID
+    GROUP BY Trips.name;
 
 -- get a single trip's data for the Update Trip form
 SELECT Trips.name, Trips.city, Trips.country, Trips.price, Trips.startDate, Trips.endDate, Features.name 
    FROM Trips
-   INNER JOIN Trip_Features ON Trips.tripID = Trip_Features.tripID
-   INNER JOIN Features ON Trip_Features.featureID = Features.featureID
+   LEFT JOIN Trip_Features ON Trips.tripID = Trip_Features.tripID
+   LEFT JOIN Features ON Trip_Features.featureID = Features.featureID
    WHERE Trips.tripID = ;trip_ID_input;
 
 
@@ -44,14 +46,14 @@ SELECT Students.name FROM Students WHERE Students.trip IS NULL;
 -- get list of Trips based on selection of filter
 SELECT name, city, country, price, startDate, endDate, Features FROM
     (SELECT Trips.tripID, Trips.name, Trips.city, Trips.country, Trips.price, Trips.startDate, Trips.endDate, GROUP_CONCAT(DISTINCT Features.name) as Features FROM Trips 
-    JOIN Trip_Features on Trip_Features.tripID = Trips.tripID 
-    JOIN Features on Features.featureID = Trip_Features.featureID 
+    LEFT JOIN Trip_Features on Trip_Features.tripID = Trips.tripID 
+    LEFT JOIN Features on Features.featureID = Trip_Features.featureID 
     GROUP BY Trips.name) 
 AS trip_options 
-JOIN 
+LEFT JOIN 
     (SELECT t.tripID FROM Trips AS t 
-    JOIN Trip_Features AS tf ON tf.tripID = t.tripID 
-    JOIN Features AS f ON f.featureID = tf.featureID 
+    LEFT JOIN Trip_Features AS tf ON tf.tripID = t.tripID 
+    LEFT JOIN Features AS f ON f.featureID = tf.featureID 
     WHERE f.featureID = :featureID_selected_filter AND f.featureID = :featureID_selected_filter_2) 
 AS matching_Trips ON matching_Trips.tripID = trip_options.tripID;
 
