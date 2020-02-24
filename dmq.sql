@@ -31,13 +31,13 @@ SELECT Features.name, GROUP_CONCAT(DISTINCT Trips.name) as trips
 -- get a single trip's data for the Update Trip form
 SELECT Trips.name, Trips.city, Trips.country, Trips.price, Trips.startDate, Trips.endDate, Features.name 
    FROM Trips
-   WHERE Trips.tripID = ;trip_ID_input;
+   WHERE Trips.tripID = :trip_ID_input;
 
 SELECT Features.name 
     FROM Features
     JOIN Trip_Features ON Features.featureID = Trip_Features.featureID
     JOIN Trips ON Trip_Features.tripID = Trips.tripID
-    WHERE Trips.tripID = ;trip_ID_input;
+    WHERE Trips.tripID = :trip_ID_input;
 
 -- get all Trips, used to populate dropdowns on Add or Update Students page
 -- also used to populate list of Trips to add feature to on Add Feature page
