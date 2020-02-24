@@ -60,8 +60,8 @@ CREATE TABLE Students (
   email varchar(255),
   trip int(11),
   staff int(11),
-  FOREIGN KEY (trip) REFERENCES trips (tripID) ON DELETE SET NULL ON UPDATE CASCADE,
-  FOREIGN KEY (staff) REFERENCES staff (staffID) ON DELETE SET NULL ON UPDATE CASCADE
+  FOREIGN KEY (trip) REFERENCES Trips (tripID) ON DELETE SET NULL ON UPDATE CASCADE,
+  FOREIGN KEY (staff) REFERENCES Staff (staffID) ON DELETE SET NULL ON UPDATE CASCADE
 )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 --
@@ -97,21 +97,21 @@ INSERT INTO Features(name) VALUES
 -- Table structure for table `trip_features`
 --
 
-DROP TABLE IF EXISTS Trip_features;
+DROP TABLE IF EXISTS Trip_Features;
 
-CREATE TABLE Trip_features (
+CREATE TABLE Trip_Features (
   tripID int(11) NOT NULL,
   featureID int(11) NOT NULL,
   PRIMARY KEY (tripID,featureID),
-  FOREIGN KEY (tripID) REFERENCES trips (tripID) ON UPDATE CASCADE,
-  FOREIGN KEY (featureID) REFERENCES features (featureID) ON UPDATE CASCADE
+  FOREIGN KEY (tripID) REFERENCES Trips (tripID) ON UPDATE CASCADE,
+  FOREIGN KEY (featureID) REFERENCES Features (featureID) ON UPDATE CASCADE
 )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `trip_features`
 --
 
-INSERT INTO Trip_features(tripID, featureID) VALUES 
+INSERT INTO Trip_Features(tripID, featureID) VALUES 
 (1,1),
 (2,2),
 (3,1),
