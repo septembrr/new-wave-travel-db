@@ -2,48 +2,48 @@
 -- CS340, Group 5
 -- New Wave Travel Agency
 
--- get all students, including staff and trip if applicable, for the Students page
-SELECT students.name, students.university, students.phone, students.email, trips.name, staff.name 
-   FROM students
-   LEFT JOIN trips ON students.trip = trips.tripID
-   LEFT JOIN staff ON students.staff = staff.staffID;
+-- get all Students, including Staff and trip if applicable, for the Students page
+SELECT Students.name, Students.university, Students.phone, Students.email, Trips.name, Staff.name 
+   FROM Students
+   LEFT JOIN Trips ON Students.trip = Trips.tripID
+   LEFT JOIN Staff ON Students.Staff = Staff.StaffID;
 
--- get all staff for the Staff page
+-- get all Staff for the Staff page
 -- also used to populate dropdown on Add or Update Student page
-SELECT staff.name, staff.phone, staff.email, staff.type FROM staff;
+SELECT Staff.name, Staff.phone, Staff.email, Staff.type FROM Staff;
 
--- get all trips, including applicable Features, for the Trips page
-SELECT trips.name, trips.city, trips.country, trips.price, trips.startDate, trips.endDate, features.name 
-   FROM trips
-   INNER JOIN trip_features ON trips.tripID = trip_features.tripID
-   INNER JOIN features ON trip_features.featureID = features.featureID;
+-- get all Trips, including applicable Features, for the Trips page
+SELECT Trips.name, Trips.city, Trips.country, Trips.price, Trips.startDate, Trips.endDate, Features.name 
+   FROM Trips
+   INNER JOIN Trip_Features ON Trips.tripID = Trip_Features.tripID
+   INNER JOIN Features ON Trip_Features.featureID = Features.featureID;
 
--- get all features, and their applicable trips, for the Features page
+-- get all Features, and their applicable Trips, for the Features page
 -- also used to populate list of Features on Browse Trips page
 -- also used to populate list on Add or Update Trips page
-SELECT features.name, trips.name
-    FROM features
-    INNER JOIN trip_features ON features.featureID = trip_features.featureID
-    INNER JOIN trips ON trip_features.tripID = trips.tripID;
+SELECT Features.name, Trips.name
+    FROM Features
+    INNER JOIN Trip_Features ON Features.featureID = Trip_Features.featureID
+    INNER JOIN Trips ON Trip_Features.tripID = Trips.tripID;
 
 -- get a single trip's data for the Update Trip form
-SELECT trips.name, trips.city, trips.country, trips.price, trips.startDate, trips.endDate, features.name 
-   FROM trips
-   INNER JOIN trip_features ON trips.tripID = trip_features.tripID
-   INNER JOIN features ON trip_features.featureID = features.featureID
-   WHERE trips.tripID = ;trip_ID_input;
+SELECT Trips.name, Trips.city, Trips.country, Trips.price, Trips.startDate, Trips.endDate, Features.name 
+   FROM Trips
+   INNER JOIN Trip_Features ON Trips.tripID = Trip_Features.tripID
+   INNER JOIN Features ON Trip_Features.featureID = Features.featureID
+   WHERE Trips.tripID = ;trip_ID_input;
 
 
--- get all trips, used to populate dropdowns on Add or Update Students page
--- also used to populate list of trips to add feature to on Add Feature page
-SELECT trips.name FROM trips;
+-- get all Trips, used to populate dropdowns on Add or Update Students page
+-- also used to populate list of Trips to add feature to on Add Feature page
+SELECT Trips.name FROM Trips;
 
--- get list of students not assigned to trips, for use on Add or update trips page
-SELECT students.name FROM students WHERE students.trip IS NULL;
+-- get list of Students not assigned to Trips, for use on Add or update Trips page
+SELECT Students.name FROM Students WHERE Students.trip IS NULL;
 
--- get list of trips based on selection of filter
-SELECT name, city, country, price, startDate, endDate, features FROM
-    (SELECT Trips.tripID, Trips.name, Trips.city, Trips.country, Trips.price, Trips.startDate, Trips.endDate, GROUP_CONCAT(DISTINCT Features.name) as features FROM Trips 
+-- get list of Trips based on selection of filter
+SELECT name, city, country, price, startDate, endDate, Features FROM
+    (SELECT Trips.tripID, Trips.name, Trips.city, Trips.country, Trips.price, Trips.startDate, Trips.endDate, GROUP_CONCAT(DISTINCT Features.name) as Features FROM Trips 
     JOIN Trip_Features on Trip_Features.tripID = Trips.tripID 
     JOIN Features on Features.featureID = Trip_Features.featureID 
     GROUP BY Trips.name) 
@@ -53,10 +53,10 @@ JOIN
     JOIN Trip_Features AS tf ON tf.tripID = t.tripID 
     JOIN Features AS f ON f.featureID = tf.featureID 
     WHERE f.featureID = :featureID_selected_filter AND f.featureID = :featureID_selected_filter_2) 
-AS matching_trips ON matching_trips.tripID = trip_options.tripID;
+AS matching_Trips ON matching_Trips.tripID = trip_options.tripID;
 
 -- insert new student
-INSERT INTO Students(name, university, phone, email, trip, staff) VALUES(:name_input, :university_input, :phone_input, :email_input, :tripID_input_from_dropdown, :staffID_input_from_dropdown);
+INSERT INTO Students(name, university, phone, email, trip, Staff) VALUES(:name_input, :university_input, :phone_input, :email_input, :tripID_input_from_dropdown, :StaffID_input_from_dropdown);
 
 -- insert new Trip
 INSERT INTO Trips(name, city, country, price, startDate, endDate) VALUES(:name_input, :city_input, :country_input, :price_input, :startDate_input_formatted_yyyy-mm-dd, :endDate_input_formatted_yyyy-mm-dd);
@@ -67,19 +67,19 @@ INSERT INTO Features(name) VALUES(:name_input);
 -- associate a trip with a feature
 INSERT INTO Trip_Features(tripID, featureID) VALUES(:tripID_input_after_trip_creation, :featuredID_input_from_checkbox), (:tripID_input2_after_trip_creation, :featuredID_input2_from_checkbox);
 
--- insert new staff member
+-- insert new Staff member
 INSERT INTO Staff(name, phone, email, type) VALUES(:name_input, :phone_input, :email_input, :type_input);
 
 -- delete one trip
 DELETE FROM Trips WHERE tripID = :tripID_input_selected_in_form;
 
 -- remove an association of a trip and feature
--- executed when trips are edited and a feature is removed
+-- executed when Trips are edited and a feature is removed
 DELETE FROM Trip_Features WHERE tripID = :tripID_input_currently_editing AND featureID = :featureID_input;
 
 -- update a student based on submission from update student form
-UPDATE TABLE Students SET name = :name_input, university = :university_input, phone = :phone_input, email = :email_input, trip = :tripID_input_selected, staff = :staffID_input_selected);
--- if no trip or staff selected, that part of the query would be left out.
+UPDATE TABLE Students SET name = :name_input, university = :university_input, phone = :phone_input, email = :email_input, trip = :tripID_input_selected, Staff = :StaffID_input_selected);
+-- if no trip or Staff selected, that part of the query would be left out.
 
 -- update a trip based on submission from update trip form
 UPDATE TABLE Trips SET name = :name_input, city = :city_input, country = :country_input, price = :price_input, startDate = :startDate_input, endDate = :endDate_input WHERE tripID = :tripID_input_selected;
