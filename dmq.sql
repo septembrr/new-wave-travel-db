@@ -3,29 +3,43 @@
 -- New Wave Travel Agency
 
 -- get all students, including staff and trip if applicable, for the Students page
-
+SELECT students.name, students.university, students.phone, students.email, trips.name, staff.name 
+   FROM students
+   LEFT JOIN trips ON students.trip = trips.tripID
+   LEFT JOIN staff ON students.staff = staff.staffID;
 
 -- get all staff for the Staff page
 -- also used to populate dropdown on Add or Update Student page
-
+SELECT staff.name, staff.phone, staff.email, staff.type FROM staff;
 
 -- get all trips, including applicable Features, for the Trips page
-
+SELECT trips.name, trips.city, trips.country, trips.price, trips.startDate, trips.endDate, features.name 
+   FROM trips
+   INNER JOIN trip_features ON trips.tripID = trip_features.tripID
+   INNER JOIN features ON trip_features.featureID = features.featureID;
 
 -- get all features, and their applicable trips, for the Features page
 -- also used to populate list of Features on Browse Trips page
--- alos used to populate list on Add or Update Trips page
-
+-- also used to populate list on Add or Update Trips page
+SELECT features.name, trips.name
+    FROM features
+    INNER JOIN trip_features ON features.featureID = trip_features.featureID
+    INNER JOIN trips ON trip_features.tripID = trips.tripID;
 
 -- get a single trip's data for the Update Trip form
+SELECT trips.name, trips.city, trips.country, trips.price, trips.startDate, trips.endDate, features.name 
+   FROM trips
+   INNER JOIN trip_features ON trips.tripID = trip_features.tripID
+   INNER JOIN features ON trip_features.featureID = features.featureID
+   WHERE trips.tripID = ;trip_ID_input;
 
 
 -- get all trips, used to populate dropdowns on Add or Update Students page
 -- also used to populate list of trips to add feature to on Add Feature page
-
+SELECT trips.name FROM trips;
 
 -- get list of students not assigned to trips, for use on Add or update trips page
-
+SELECT students.name FROM students WHERE students.trip IS NULL;
 
 -- get list of trips based on selection of filter
 SELECT name, city, country, price, startDate, endDate, features FROM
