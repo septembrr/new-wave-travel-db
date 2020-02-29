@@ -1,1 +1,4 @@
 emily-notes.sql
+node_modules/
+*.DS_Store
+logins.js
