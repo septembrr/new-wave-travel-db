@@ -36,3 +36,73 @@ app.use(function(err, req, res, next){
 app.listen(app.get('port'), function(){
   console.log('Express started; press Ctrl-C to terminate.');
 });
+
+//********Create tables in database*********
+
+
+//Index route
+app.get('/index', function(req, res, next){
+  res.render('index');                
+});
+
+//Staff route
+app.get('/staff', function(req, res, next){
+  var context = {};
+
+  //Get our elements in the database 
+  pool.query('SELECT name, phone, email, type FROM Staff', function(err, rows, fields){           
+  if(err){                                                                    
+      next(err);
+      return;
+  }
+
+  //Create a variable to hold the parameters
+  var paramList = [];                                
+  for(var row in rows){
+
+     //Use variable to hold values of each row
+      var addValue = {'name': rows[row].name,      
+                  'phone': rows[row].university, 
+                  'email': rows[row].phone, 
+                  'type':rows[row].email};
+      //Push parameters of each row into the array
+      paramList.push(addValue);                   
+  }
+  context.results = paramList;
+
+  //Display the table
+  res.render('staff', context);                
+  })
+});
+
+//Students route
+app.get('/students', function(req, res, next){
+  var context = {};
+
+  //Get our elements in the database 
+  pool.query('SELECT name, university, phone, email, trip, staff FROM Students', function(err, rows, fields){           
+  if(err){                                                                    
+      next(err);
+      return;
+  }
+
+  //Create a variable to hold the parameters
+  var paramList = [];                                
+  for(var row in rows){
+
+     //Use variable to hold values of each row
+      var addValue = {'name': rows[row].name,      
+                  'university': rows[row].university, 
+                  'phone': rows[row].phone, 
+                  'email':rows[row].email, 
+                  'trip':rows[row].trip,
+                  'staff':rows[row].staff};
+      //Push parameters of each row into the array
+      paramList.push(addValue);                   
+  }
+  context.results = paramList;
+
+  //Display the table
+  res.render('students', context);                
+  })
+});
