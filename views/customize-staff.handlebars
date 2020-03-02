@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <title>Customize Staff</title>
+   </head>
+   <body>
+      <nav class="navbar navbar-default">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/index">New Wave Travel</a>
+                </div>
+            
+                <ul class="nav navbar-nav">
+                    <li><a href="/index">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Students<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/students">All Students</a></li>
+                            <li><a href="/customize-student">Add Student</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Staff<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/staff">All Staff</a></li>
+                            <li class="active"><a href="/customize-staff">Add Staff</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Trips<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/trips">Browse Trips</a></li>
+                            <li><a href="/customize-trip">Add Trip</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Features<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/features">All Features</a></li>
+                            <li><a href="/customize-feature">Add Feature</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+      </nav>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h1>Add Staff</h1>
+                    <p>Add a new staff member.</p>
+                    <br>
+                </div>
+            </div>
+            <div class="row">
+               <div class="col-md-12">
+                    <form action="/customize-staff" method="post">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="sr-only" for="name">Name</label>
+                                    <input type="text" id="name" name="name" class="form-control" placeholder="Name*" required />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="sr-only" for="phone">Phone</label>
+                                    <input type="text" id="phone" name="phone" class="form-control" placeholder="Phone*" required />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="sr-only" for="email">Email</label>
+                                    <input type="text" id="email" name="email" class="form-control" placeholder="Email*" required />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="sr-only" for="role">Role</label>
+                                    <input type="text" id="role" name="role" class="form-control" placeholder="Role*" required />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                          <input type="submit" name="add" value="Add" class="btn btn-primary" />
+                        </div>
+                  </form>
+               </div>
+            </div>
+         </div>
+   </body>
+</html>
