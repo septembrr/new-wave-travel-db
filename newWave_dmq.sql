@@ -13,7 +13,7 @@ SELECT Students.name, Students.university, Students.phone, Students.email, Trips
 SELECT Staff.name, Staff.phone, Staff.email, Staff.type FROM Staff;
 
 -- get all Trips, including applicable Features, for the Trips page
-SELECT Trips.name, Trips.city, Trips.country, Trips.price, Trips.startDate, Trips.endDate, GROUP_CONCAT(DISTINCT Features.name) as Features
+SELECT Trips.tripID, Trips.name, Trips.city, Trips.country, Trips.price, Trips.startDate, Trips.endDate, GROUP_CONCAT(DISTINCT Features.name ORDER BY Features.name ASC SEPARATOR ', ') as features
    FROM Trips
    LEFT JOIN Trip_Features ON Trips.tripID = Trip_Features.tripID
    LEFT JOIN Features ON Trip_Features.featureID = Features.featureID
@@ -22,7 +22,7 @@ SELECT Trips.name, Trips.city, Trips.country, Trips.price, Trips.startDate, Trip
 -- get all Features, and their applicable Trips, for the Features page
 -- also used to populate list of Features on Browse Trips page
 -- also used to populate list on Add or Update Trips page
-SELECT Features.name, GROUP_CONCAT(DISTINCT Trips.name) as trips
+SELECT Features.name, GROUP_CONCAT(DISTINCT Trips.name ORDER BY Trips.name ASC SEPARATOR ', ') as trips
     FROM Features
     LEFT JOIN Trip_Features ON Features.featureID = Trip_Features.featureID
     LEFT JOIN Trips ON Trip_Features.tripID = Trips.tripID

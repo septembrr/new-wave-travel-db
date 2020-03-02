@@ -1,0 +1,36 @@
+{{>menu}}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h1>Features</h1>
+            <p>View the features for all trips.</p>
+            <p>Want to add a new feature? <a href="customize-feature.html">Add a new feature here.</a></p>
+            <br>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>Feature Name</th>
+                        <th>Trips Found In</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each featureList}}
+                    <tr>
+                        <td>{{this.name}}</td>
+                        <td>{{this.trips}}</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <hr />
+        </div>
+    </div>
+</div>
