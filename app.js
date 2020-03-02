@@ -323,13 +323,13 @@ app.get('/customize-student', function(req, res, next){
         var phone = req.query.phone;
         var email = req.query.email;
         var trip = req.query.trip;
-        if(trip = "NULL"){
-          trip = NULL;
+        if(trip == "NULL"){
+          trip = null;
         }
 
         var staff = req.query.staff;
-        if(staff = "NULL"){
-          staff = NULL;
+        if(staff == "NULL"){
+          staff = null;
         }
     
         var sql = "INSERT INTO Students (name, university, phone, email, trip, staff) VALUES (?, ?, ?, ?, ?, ?);";
