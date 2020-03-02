@@ -1,48 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-   <head>
-      <title>Customize Student</title>
-   </head>
-   <body>
-      <nav class="navbar navbar-default">
-         <div class="container">
-            <div class="navbar-header">
-               <a class="navbar-brand" href="/index">New Wave Travel</a>
-            </div>
-          
-            <ul class="nav navbar-nav">
-               <li><a href="/index">Home</a></li>
-               <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Students<span class="caret"></span></a>
-                  <ul class="dropdown-menu">
-                     <li class="active"><a href="/students">All Students</a></li>
-                     <li><a href="/customize-student">Add Student</a></li>
-                  </ul>
-               </li>
-               <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Staff<span class="caret"></span></a>
-                  <ul class="dropdown-menu">
-                     <li><a href="/staff">All Staff</a></li>
-                     <li><a href="/customize-staff">Add Staff</a></li>
-                  </ul>
-               </li>
-               <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Trips<span class="caret"></span></a>
-                  <ul class="dropdown-menu">
-                     <li><a href="/trips">Browse Trips</a></li>
-                     <li><a href="/customize-trip">Add Trip</a></li>
-                  </ul>
-               </li>
-               <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Features<span class="caret"></span></a>
-                  <ul class="dropdown-menu">
-                     <li><a href="/features">All Features</a></li>
-                     <li><a href="/customize-feature">Add Feature</a></li>
-                  </ul>
-               </li>
-            </ul>
-         </div>
-      </nav>
+{{>menu}}
       <div class="container">
          <div class="row">
              <div class="col-sm-12">
@@ -84,22 +40,22 @@
                      <div class="col-md-3">
                         <div class="form-group">
                            <label for="staff">Associated Staff Member</label>
-                           <select class="form-control" id="staff">
+                           <select class="form-control" id="staff" name="staff">
                               <option>None</option>
-                              <option>Annie McGrath</option>
-                              <option>George Ruffe</option>
-                              <option>Dolores Stevens</option>
+                              {{#each staffList}}
+                                 <option value = {{this.staffID}}> {{this.name}}</option>
+                              {{/each}}
                            </select>
                         </div>
                      </div>
                      <div class="col-md-3">
                         <div class="form-group">
                            <label for="trip">Associated Trip</label>
-                           <select class="form-control" id="trip">
+                           <select class="form-control" id="trip" name="trip">
                               <option>None</option>
-                              <option>Paris Art Study</option>
-                              <option>Himalaya Trek</option>
-                              <option>Food of Italy</option>
+                              {{#each tripList}}
+                                 <option value = {{this.tripID}}> {{this.name}}</option>
+                              {{/each}}
                            </select>
                         </div>
                      </div>

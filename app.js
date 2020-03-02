@@ -273,7 +273,28 @@ app.get('/customize-staff', function(req, res, next) {
 //Customize-student default page (need to change to allow update...)
 app.get('/customize-student', function(req, res, next){
   let context = {pageTitle: 'Add or Update Student'};
-  res.render('customize-student');
+
+  let query = "SELECT Staff.staffID, Staff.name FROM Staff;";
+
+  pool.query(query, function(err, rows, fields){
+    if(err){                                                                    
+      next(err);
+      return;
+    }
+    context.staffList = rows;
+
+    query = "SELECT Trips.tripID, Trips.name FROM Trips;";
+
+    pool.query(query, function(err, rows, fields){
+      if(err){                                                                    
+        next(err);
+        return;
+      }
+
+      context.tripList = rows;
+      res.render('customize-student');
+    })
+  })
 });
 
 app.use(function(req,res){
