@@ -29,10 +29,6 @@ app.get('/trips',function(req,res,next){
   let queryArgs = [];
 
   if(req.query.filter) {
-    req.query.feature.array.forEach(element => {
-      queryArgs.push(element);
-    });
-
     query = "SELECT name, city, country, price, startDate, endDate, Features FROM (SELECT Trips.tripID, Trips.name, Trips.city, Trips.country, Trips.price, Trips.startDate, Trips.endDate, GROUP_CONCAT(DISTINCT Features.name ORDER BY Features.name ASC SEPARATOR ', ') as features FROM Trips LEFT JOIN Trip_Features on Trip_Features.tripID = Trips.tripID LEFT JOIN Features on Features.featureID = Trip_Features.featureID GROUP BY Trips.name) AS trip_options LEFT JOIN (SELECT t.tripID FROM Trips AS t LEFT JOIN Trip_Features AS tf ON tf.tripID = t.tripID LEFT JOIN Features AS f ON f.featureID = tf.featureID WHERE ";
     
     for(let i = 0; i < req.query.filter.length; i++) {
