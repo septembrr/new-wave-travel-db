@@ -229,7 +229,7 @@ app.get('/staff', function(req, res, next){
 
 //Students route
 app.get('/students', function(req, res, next){
-  var context = {};
+  var context = {pageTitle: 'Students'};
 
   //Get our elements in the database 
   pool.query('SELECT Students.studentID, Students.name AS studentName, Students.university, Students.phone, Students.email, Trips.name AS tripsName, Staff.name AS staffName FROM Students LEFT JOIN Trips ON Students.trip = Trips.tripID LEFT JOIN Staff ON Students.staff = Staff.staffID', function(err, rows, fields){           
@@ -245,30 +245,21 @@ app.get('/students', function(req, res, next){
   })
 });
 
-//Customize-staff default page 
-app.get('/customize-staff', function(req, res, next){
-  res.render('customize-staff');
-});
-
 //Insert new staff into DB via POST /customize-staff
-app.post('/customize-staff', function(req, res, next) {
-  console.log(req.body);
+app.get('/customize-staff', function(req, res, next) {
+  let context = {pageTitle: 'Add Staff'};
+  
     var name = req.body.name;
     var phone = req.body.phone;
     var email = req.body.email;
     var role = req.body.role;
 
-    pool.connect(function (err) {
-        if (err) throw err;
-        console.log("connected");
-
-        var sql = "INSERT INTO 'Staff' (name, phone, email, type) VALUES (name, phone, email, role)";
-        pool.query(sql, function (err) {
+        var sql = "INSERT INTO 'Staff' (name, phone, email, type) VALUES (?, ?, ?, ?)";
+        pool.query(sql, [name, phone, email, role], function (err) {
             if (err) throw err;
             console.log("One record inserted");
         });
-    });
-    res.render('customize-staff');
+    res.render('customize-staff', context);
 });
 
 //Customize-student default page (need to change to allow update...)
