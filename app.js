@@ -319,7 +319,14 @@ app.get('/customize-student', function(req, res, next){
         var phone = req.query.phone;
         var email = req.query.email;
         var trip = req.query.trip;
+        if(trip = "NULL"){
+          trip = NULL;
+        }
+
         var staff = req.query.staff;
+        if(staff = "NULL"){
+          staff = NULL;
+        }
     
         var sql = "INSERT INTO Students (name, university, phone, email, trip, staff) VALUES (?, ?, ?, ?, ?, ?);";
         pool.query(sql, [name, university, phone, email, trip, staff], function (err) {
