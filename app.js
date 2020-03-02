@@ -18,8 +18,8 @@ app.set('port', 8000);
 app.use(express.static('public'));
 
 app.get('/',function(req,res,next){
-    let context = {pageTitle: 'Test Homepage'};
-    res.render('home', context);
+    let context = {pageTitle: 'Homepage'};
+    res.render('index', context);
 });
 
 app.get('/trips',function(req,res,next){
@@ -65,7 +65,7 @@ app.get('/customize-feature',function(req,res,next){
     context.tripList = rows;
 
     // If there is an item to add
-    if(req.query.add){  
+    if (req.query.add) {  
       let insertQuery = "INSERT INTO Features(name) VALUES(?);";
       pool.query(insertQuery, [req.query.name], function(err, result) {
         if(err) {
@@ -192,22 +192,6 @@ app.get('/customize-trip',function(req,res,next){
   });
 });
 
-app.use(function(req,res){
-  res.status(404);
-  res.render('404');
-});
-
-app.use(function(err, req, res, next){
-  console.error(err.stack);
-  res.type('plain/text');
-  res.status(500);
-  res.render('500');
-});
-
-app.listen(app.get('port'), function(){
-  console.log('Express started; press Ctrl-C to terminate.');
-});
-
 //Index route
 app.get('/index', function(req, res, next){
   res.render('index');                
@@ -281,7 +265,7 @@ app.get('/customize-staff', function(req, res, next){
 });
 
 //Insert new staff into DB via POST /customize-staff
-app.post('/customize-staff',urlencodedParser, function(req, res, next) {
+app.post('/customize-staff', function(req, res, next) {
   console.log(req.body);
     var name = req.body.name;
     var phone = req.body.phone;
@@ -306,3 +290,18 @@ app.get('/customize-student', function(req, res, next){
   res.render('customize-student');
 });
 
+app.use(function(req,res){
+  res.status(404);
+  res.render('404');
+});
+
+app.use(function(err, req, res, next){
+  console.error(err.stack);
+  res.type('plain/text');
+  res.status(500);
+  res.render('500');
+});
+
+app.listen(app.get('port'), function(){
+  console.log('Express started; press Ctrl-C to terminate.');
+});
