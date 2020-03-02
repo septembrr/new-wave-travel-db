@@ -310,6 +310,10 @@ app.get('/customize-student', function(req, res, next){
           });
       }
 
+      else{
+        res.render('customize-student', context);
+      }
+
     })
   })
 });
