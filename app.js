@@ -292,7 +292,7 @@ app.get('/customize-student', function(req, res, next){
       }
 
       context.tripList = rows;
-      res.render('customize-student');
+      res.render('customize-student', context);
     })
   })
 });
