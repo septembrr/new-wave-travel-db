@@ -4,6 +4,11 @@
              <div class="col-sm-12">
                  <h1>Add or Update Student</h1>
                  <p>Add or update a student.</p>
+                 {{#if message}}
+                     <div class="alert alert-success" role="alert">
+                        {{message}}
+                     </div>
+                  {{/if}}
                  <br>
              </div>
          </div>

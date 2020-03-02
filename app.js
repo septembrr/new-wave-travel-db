@@ -305,7 +305,28 @@ app.get('/customize-student', function(req, res, next){
       }
 
       context.tripList = rows;
-      res.render('customize-student', context);
+      if (req.query.add){
+        var name = req.query.name;
+        var university = req.query.university;
+        var phone = req.query.phone;
+        var email = req.query.email;
+        var trip = req.query.trip;
+        var staff = req.query.staff;
+    
+        var sql = "INSERT INTO Students (name, university, phone, email, trip, staff) VALUES (?, ?, ?, ?, ?, ?);";
+        pool.query(sql, [name, university, phone, email, trip, staff], function (err) {
+          if(err){                                                                    
+            next(err);
+            return;}
+            context.message = "Student added successfully.";
+            res.render('customize-student', context);
+          });
+      }
+
+      else{
+        res.render('customize-student', context);
+      }
+
     })
   })
 });
