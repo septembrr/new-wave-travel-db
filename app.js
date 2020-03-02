@@ -205,12 +205,13 @@ app.get('/customize-trip',function(req,res,next){
 
 //Index route
 app.get('/index', function(req, res, next){
-  res.render('index');                
+  let context = {pageTitle: 'Index'}
+  res.render('index', context);                
 });
 
 //Staff route
 app.get('/staff', function(req, res, next){
-  var context = {};
+  var context = {pageTitle: 'Staff'};
 
   //Get our elements in the database 
   pool.query('SELECT Staff.name, Staff.phone, Staff.email, Staff.type FROM Staff', function(err, rows, fields){           
@@ -219,19 +220,7 @@ app.get('/staff', function(req, res, next){
       return;
   }
 
-  //Create a variable to hold the parameters
-  var paramList = [];                                
-  for(var row in rows){
-
-     //Use variable to hold values of each row
-      var addValue = {'name': rows[row].name,      
-                  'phone': rows[row].university, 
-                  'email': rows[row].phone, 
-                  'type':rows[row].email};
-      //Push parameters of each row into the array
-      paramList.push(addValue);                   
-  }
-  context.results = paramList;
+  context.results = rows;
 
   //Display the table
   res.render('staff', context);                
@@ -249,21 +238,7 @@ app.get('/students', function(req, res, next){
       return;
   }
 
-  //Create a variable to hold the parameters
-  var paramList = [];                                
-  for(var row in rows){
-
-     //Use variable to hold values of each row
-      var addValue = {'name': rows[row].name,      
-                  'university': rows[row].university, 
-                  'phone': rows[row].phone, 
-                  'email':rows[row].email, 
-                  'trip':rows[row].trip,
-                  'staff':rows[row].staff};
-      //Push parameters of each row into the array
-      paramList.push(addValue);                   
-  }
-  context.results = paramList;
+  context.results = rows;
 
   //Display the table
   res.render('students', context);                
