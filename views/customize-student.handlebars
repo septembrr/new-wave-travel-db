@@ -46,7 +46,7 @@
                         <div class="form-group">
                            <label for="staff">Associated Staff Member</label>
                            <select class="form-control" id="staff" name="staff">
-                              <option>None</option>
+                              <option value = "">None</option>
                               {{#each staffList}}
                                  <option value = {{this.staffID}}> {{this.name}}</option>
                               {{/each}}
@@ -57,7 +57,7 @@
                         <div class="form-group">
                            <label for="trip">Associated Trip</label>
                            <select class="form-control" id="trip" name="trip">
-                              <option>None</option>
+                              <option value = "">None</option>
                               {{#each tripList}}
                                  <option value = {{this.tripID}}> {{this.name}}</option>
                               {{/each}}
