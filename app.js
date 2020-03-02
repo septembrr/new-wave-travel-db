@@ -249,17 +249,25 @@ app.get('/students', function(req, res, next){
 app.get('/customize-staff', function(req, res, next) {
   let context = {pageTitle: 'Add Staff'};
   
-    var name = req.body.name;
-    var phone = req.body.phone;
-    var email = req.body.email;
-    var role = req.body.role;
+  if (req.query.add){
+    var name = req.query.name;
+    var phone = req.query.phone;
+    var email = req.query.email;
+    var role = req.query.role;
 
-        var sql = "INSERT INTO 'Staff' (name, phone, email, type) VALUES (?, ?, ?, ?)";
-        pool.query(sql, [name, phone, email, role], function (err) {
-            if (err) throw err;
-            console.log("One record inserted");
-            res.render('customize-staff', context);
-        });
+    var sql = "INSERT INTO 'Staff' (name, phone, email, type) VALUES (?, ?, ?, ?)";
+    pool.query(sql, [name, phone, email, role], function (err) {
+      if(err){                                                                    
+        next(err);
+        return;}
+        console.log("One record inserted");
+        res.render('customize-staff', context);
+      });
+  }
+
+  else{
+    res.render('customize-staff', context);
+  }
 });
 
 //Customize-student default page (need to change to allow update...)
