@@ -232,7 +232,7 @@ app.get('/students', function(req, res, next){
   var context = {};
 
   //Get our elements in the database 
-  pool.query('SELECT Students.id, Students.name, Students.university, Students.phone, Students.email, Trips.name, Staff.name FROM Students LEFT JOIN Trips ON Students.trip = Trips.tripID LEFT JOIN Staff ON Students.Staff = Staff.staffID', function(err, rows, fields){           
+  pool.query('SELECT Students.id, Students.name AS studentName, Students.university, Students.phone, Students.email, Trips.name AS tripsName, Staff.name AS staffName FROM Students LEFT JOIN Trips ON Students.trip = Trips.tripID LEFT JOIN Staff ON Students.staff = Staff.staffID', function(err, rows, fields){           
   if(err){                                                                    
       next(err);
       return;
