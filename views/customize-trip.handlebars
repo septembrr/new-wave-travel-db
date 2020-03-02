@@ -1,0 +1,106 @@
+{{>menu}}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h1>Add Trip</h1>
+            <p>Add a new trip below.</p>
+            {{#if message}}
+                <div class="alert alert-success" role="alert">
+                    {{message}}
+                </div>
+            {{/if}}
+            <p>{{reqQuery}}</p>
+            <br>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <form action="/customize-trip" method="get">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="sr-only" for="title">Title</label>
+                            <input type="text" id="title" name="title" class="form-control" placeholder="Title*" required />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="sr-only" for="city">City</label>
+                            <input type="text" id="city" name="city" class="form-control" placeholder="City*" required />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="sr-only" for="country">Country</label>
+                            <input type="text" id="country" name="country" class="form-control" placeholder="Country*" required />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon">$</div>
+                                <input type="number" id="price" name="price" class="form-control" placeholder="Price*" required />
+                                <div class="input-group-addon">.00</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="sr-only" for="startDate">Start Date</label>
+                            <input type="date" id="startDate" name="startDate" class="form-control" placeholder="Start Date*" required />
+                            <span class="help-block"><strong>Start Date*</strong></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="sr-only" for="endDate">End Date</label>
+                            <input type="date" id="endDate" name="endDate" class="form-control" placeholder="End Date*" required />
+                            <span class="help-block"><strong>End Date*</strong></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Features</label>
+                            {{#if featureList}}
+                                {{#each featureList}}
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" id="{{this.featureID}}" name="feature" value="{{this.featureID}}" />
+                                            {{this.name}}
+                                        </label>
+                                    </div>
+                                {{/each}}
+                            {{else}}
+                                <p>No features available.</p>
+                            {{/if}}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Available Students</label>
+                            {{#if studentList}}
+                                {{#each studentList}}
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" id="{{this.studentID}}" name="student" value="{{this.studentID}}" />
+                                            {{this.name}}
+                                        </label>
+                                    </div>
+                                {{/each}}
+                            {{else}}
+                                <p>No students available.</p>
+                            {{/if}}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="submit" name="add" value="Add" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

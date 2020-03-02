@@ -21,12 +21,14 @@ SELECT Trips.tripID, Trips.name, Trips.city, Trips.country, Trips.price, Trips.s
 
 -- get all Features, and their applicable Trips, for the Features page
 -- also used to populate list of Features on Browse Trips page
--- also used to populate list on Add or Update Trips page
 SELECT Features.name, GROUP_CONCAT(DISTINCT Trips.name ORDER BY Trips.name ASC SEPARATOR ', ') as trips
     FROM Features
     LEFT JOIN Trip_Features ON Features.featureID = Trip_Features.featureID
     LEFT JOIN Trips ON Trip_Features.tripID = Trips.tripID
-    GROUP BY Trips.name;
+    GROUP BY Features.name;
+
+-- get list of features for add trip dropdown
+SELECT Features.featureID, Features.name FROM Features;
 
 -- get a single trip's data for the Update Trip form
 SELECT Trips.name, Trips.city, Trips.country, Trips.price, Trips.startDate, Trips.endDate, Features.name 
@@ -41,10 +43,10 @@ SELECT Features.name
 
 -- get all Trips, used to populate dropdowns on Add or Update Students page
 -- also used to populate list of Trips to add feature to on Add Feature page
-SELECT Trips.name FROM Trips;
+SELECT Trips.tripID, Trips.name FROM Trips;
 
 -- get list of Students not assigned to Trips, for use on Add or update Trips page
-SELECT Students.name FROM Students WHERE Students.trip IS NULL;
+SELECT Students.studentID, Students.name FROM Students WHERE Students.trip IS NULL;
 
 -- get list of Trips based on selection of filter
 SELECT name, city, country, price, startDate, endDate, Features FROM

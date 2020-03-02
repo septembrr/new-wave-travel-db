@@ -1,0 +1,38 @@
+{{>menu}}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h1>Add Feature</h1>
+            <p>Add a new feature below.</p>
+            {{#if message}}
+                <div class="alert alert-success" role="alert">
+                    {{message}}
+                </div>
+            {{/if}}
+            <br>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <form action="/customize-feature" method="get">
+                <div class="form-group">
+                    <input name="name" type="text" class="form-control" placeholder="Feature Title*" required />
+                </div>
+                <div class="form-group">
+                    <label>Trips With This Feature</label>
+                    {{#each tripList}}
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" id="{{this.name}}" name="trip" value="{{this.tripID}}" />
+                            {{this.name}}
+                        </label>
+                    </div>
+                    {{/each}}
+                </div>
+                <div class="form-group">
+                    <input type="submit" name="add" value="Add" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
