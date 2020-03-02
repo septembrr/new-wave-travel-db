@@ -9,8 +9,10 @@ SELECT Students.name, Students.university, Students.phone, Students.email, Trips
    LEFT JOIN Staff ON Students.Staff = Staff.staffID;
 
 -- get all Staff for the Staff page
--- also used to populate dropdown on Add or Update Student page
 SELECT Staff.name, Staff.phone, Staff.email, Staff.type FROM Staff;
+
+-- populate dropdown on Add or Update Student page
+SELECT Staff.staffID, Staff.name FROM Staff;
 
 -- get all Trips, including applicable Features, for the Trips page
 SELECT Trips.tripID, Trips.name, Trips.city, Trips.country, Trips.price, Trips.startDate, Trips.endDate, GROUP_CONCAT(DISTINCT Features.name ORDER BY Features.name ASC SEPARATOR ', ') as features
