@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
    <head>
-      <title>Students</title>
+      <title>Customize Student</title>
    </head>
    <body>
       <nav class="navbar navbar-default">
@@ -43,3 +43,75 @@
             </ul>
          </div>
       </nav>
+      <div class="container">
+         <div class="row">
+             <div class="col-sm-12">
+                 <h1>Add or Update Student</h1>
+                 <p>Add or update a student.</p>
+                 <br>
+             </div>
+         </div>
+         <div class="row">
+            <div class="col-md-12">
+               <form action="/customize-student" method="post">
+                  <div class="row">
+                     <div class="col-md-3">
+                        <div class="form-group">
+                           <label class="sr-only" for="name">Name</label>
+                           <input type="text" id="name" name="name" class="form-control" placeholder="Name*" required />
+                        </div>
+                     </div>
+                     <div class="col-md-3">
+                        <div class="form-group">
+                           <label class="sr-only" for="role">University</label>
+                           <input type="text" id="role" name="role" class="form-control" placeholder="Role*" required />
+                        </div>
+                     </div>
+                     <div class="col-md-3">
+                        <div class="form-group">
+                           <label class="sr-only" for="phone">Phone</label>
+                           <input type="text" id="phone" name="phone" class="form-control" placeholder="Phone*" required />
+                        </div>
+                     </div>
+                     <div class="col-md-3">
+                        <div class="form-group">
+                           <label class="sr-only" for="email">Email</label>
+                           <input type="text" id="email" name="email" class="form-control" placeholder="Email*" required />
+                        </div>
+                     </div>
+                  </div>
+                  <div class="row">
+                     <div class="col-md-3">
+                        <div class="form-group">
+                           <label for="staff">Associated Staff Member</label>
+                           <select class="form-control" id="staff">
+                              <option>None</option>
+                              <option>Annie McGrath</option>
+                              <option>George Ruffe</option>
+                              <option>Dolores Stevens</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="col-md-3">
+                        <div class="form-group">
+                           <label for="trip">Associated Trip</label>
+                           <select class="form-control" id="trip">
+                              <option>None</option>
+                              <option>Paris Art Study</option>
+                              <option>Himalaya Trek</option>
+                              <option>Food of Italy</option>
+                           </select>
+                        </div>
+                     </div>
+                  </div>   
+                  <div class="row">
+                     <div class="form-group">
+                       <input type="submit" name="add" value="Add" class="btn btn-primary" />
+                     </div>
+                  </div>
+               </form>
+            </div>
+         </div>
+     </div>
+   </body>
+</html>

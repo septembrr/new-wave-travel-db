@@ -37,9 +37,6 @@ app.listen(app.get('port'), function(){
   console.log('Express started; press Ctrl-C to terminate.');
 });
 
-//********Create tables in database*********
-
-
 //Index route
 app.get('/index', function(req, res, next){
   res.render('index');                
@@ -50,7 +47,7 @@ app.get('/staff', function(req, res, next){
   var context = {};
 
   //Get our elements in the database 
-  pool.query('SELECT name, phone, email, type FROM Staff', function(err, rows, fields){           
+  pool.query('SELECT Staff.name, Staff.phone, Staff.email, Staff.type FROM Staff', function(err, rows, fields){           
   if(err){                                                                    
       next(err);
       return;
@@ -80,7 +77,7 @@ app.get('/students', function(req, res, next){
   var context = {};
 
   //Get our elements in the database 
-  pool.query('SELECT name, university, phone, email, trip, staff FROM Students', function(err, rows, fields){           
+  pool.query('SELECT Students.name, Students.university, Students.phone, Students.email, Trips.name, Staff.name FROM Students LEFT JOIN Trips ON Students.trip = Trips.tripID LEFT JOIN Staff ON Students.Staff = Staff.staffID', function(err, rows, fields){           
   if(err){                                                                    
       next(err);
       return;
@@ -106,3 +103,35 @@ app.get('/students', function(req, res, next){
   res.render('students', context);                
   })
 });
+
+//Customize-staff default page 
+app.get('/customize-staff', function(req, res, next){
+  res.render('customize-staff');
+});
+
+//Insert new staff into DB via POST /customize-staff
+app.post('/customize-staff',urlencodedParser, function(req, res, next) {
+  console.log(req.body);
+    var name = req.body.name;
+    var phone = req.body.phone;
+    var email = req.body.email;
+    var role = req.body.role;
+
+    pool.connect(function (err) {
+        if (err) throw err;
+        console.log("connected");
+
+        var sql = "INSERT INTO 'Staff' (name, phone, email, type) VALUES (name, phone, email, role)";
+        pool.query(sql, function (err) {
+            if (err) throw err;
+            console.log("One record inserted");
+        });
+    });
+    res.render('customize-staff');
+});
+
+//Customize-student default page (need to change to allow update...)
+app.get('/customize-student', function(req, res, next){
+  res.render('customize-student');
+});
+
