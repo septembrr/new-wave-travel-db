@@ -260,7 +260,7 @@ app.get('/customize-staff', function(req, res, next) {
       if(err){                                                                    
         next(err);
         return;}
-        context.message = "Trip added successfully.";
+        context.message = "Staff added successfully.";
         res.render('customize-staff', context);
       });
   }
