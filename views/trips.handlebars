@@ -20,24 +20,16 @@
                     <h4>Filter by Feature</h4>
                 </div>
                 <div class="form-group">
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" id="homestay" name="feature" value="homestay" />
-                            Homestay
-                        </label>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" id="outdoors" name="feature" value="outdoors" />
-                            Outdoors
-                        </label>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" id="internship" name="feature" value="internship" />
-                            Internship
-                        </label>
-                    </div>
+                    {{#if featureList}}
+                        {{#each featureList}}
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" id="{{this.featureID}}" name="feature" value="{{this.featureID}}" />
+                                    {{this.name}}
+                                </label>
+                            </div>
+                        {{/each}}
+                    {{/if}}
                 </div>
                 <input type="submit" name="filter" value="Filter" class="btn btn-primary" />
             </form>

@@ -20,7 +20,6 @@ SELECT Trips.tripID, Trips.name, Trips.city, Trips.country, Trips.price, Trips.s
    GROUP BY Trips.name;
 
 -- get all Features, and their applicable Trips, for the Features page
--- also used to populate list of Features on Browse Trips page
 SELECT Features.name, GROUP_CONCAT(DISTINCT Trips.name ORDER BY Trips.name ASC SEPARATOR ', ') as trips
     FROM Features
     LEFT JOIN Trip_Features ON Features.featureID = Trip_Features.featureID
@@ -28,6 +27,7 @@ SELECT Features.name, GROUP_CONCAT(DISTINCT Trips.name ORDER BY Trips.name ASC S
     GROUP BY Features.name;
 
 -- get list of features for add trip dropdown
+-- get list of features for filter list on browse trips page
 SELECT Features.featureID, Features.name FROM Features;
 
 -- get a single trip's data for the Update Trip form
