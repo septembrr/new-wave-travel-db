@@ -245,7 +245,7 @@ app.get('/students', function(req, res, next){
   })
 });
 
-//Insert new staff into DB via POST /customize-staff
+//Insert new staff into DB via GET 
 app.get('/customize-staff', function(req, res, next) {
   let context = {pageTitle: 'Add Staff'};
   
@@ -260,7 +260,7 @@ app.get('/customize-staff', function(req, res, next) {
       if(err){                                                                    
         next(err);
         return;}
-        console.log("One record inserted");
+        context.message = "Trip added successfully.";
         res.render('customize-staff', context);
       });
   }
@@ -272,6 +272,7 @@ app.get('/customize-staff', function(req, res, next) {
 
 //Customize-student default page (need to change to allow update...)
 app.get('/customize-student', function(req, res, next){
+  let context = {pageTitle: 'Add or Update Student'};
   res.render('customize-student');
 });
 

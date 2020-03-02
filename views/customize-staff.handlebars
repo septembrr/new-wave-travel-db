@@ -4,6 +4,11 @@
                 <div class="col-sm-12">
                     <h1>Add Staff</h1>
                     <p>Add a new staff member.</p>
+                    {{#if message}}
+                        <div class="alert alert-success" role="alert">
+                            {{message}}
+                        </div>
+                    {{/if}}
                     <br>
                 </div>
             </div>
