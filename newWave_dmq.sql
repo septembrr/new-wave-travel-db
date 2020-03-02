@@ -3,10 +3,9 @@
 -- New Wave Travel Agency
 
 -- get all Students, including Staff and trip if applicable, for the Students page
-SELECT Students.name, Students.university, Students.phone, Students.email, Trips.name, Staff.name 
-   FROM Students
-   LEFT JOIN Trips ON Students.trip = Trips.tripID
-   LEFT JOIN Staff ON Students.Staff = Staff.staffID;
+SELECT Students.studentID, Students.name AS studentName, Students.university, Students.phone, Students.email, Trips.name AS tripsName, Staff.name AS staffName FROM Students 
+    LEFT JOIN Trips ON Students.trip = Trips.tripID 
+    LEFT JOIN Staff ON Students.staff = Staff.staffID;
 
 -- get all Staff for the Staff page
 SELECT Staff.name, Staff.phone, Staff.email, Staff.type FROM Staff;
@@ -52,15 +51,15 @@ SELECT Students.studentID, Students.name FROM Students WHERE Students.trip IS NU
 
 -- get list of Trips based on selection of filter
 SELECT name, city, country, price, startDate, endDate, Features FROM
-    (SELECT Trips.tripID, Trips.name, Trips.city, Trips.country, Trips.price, Trips.startDate, Trips.endDate, GROUP_CONCAT(DISTINCT Features.name) as Features FROM Trips 
-    LEFT JOIN Trip_Features on Trip_Features.tripID = Trips.tripID 
-    LEFT JOIN Features on Features.featureID = Trip_Features.featureID 
+    (SELECT Trips.tripID, Trips.name, Trips.city, Trips.country, Trips.price, Trips.startDate, Trips.endDate, GROUP_CONCAT(DISTINCT Features.name ORDER BY Features.name ASC SEPARATOR ', ') as features FROM Trips 
+    JOIN Trip_Features on Trip_Features.tripID = Trips.tripID 
+    JOIN Features on Features.featureID = Trip_Features.featureID 
     GROUP BY Trips.name) 
 AS trip_options 
-LEFT JOIN 
+JOIN 
     (SELECT t.tripID FROM Trips AS t 
-    LEFT JOIN Trip_Features AS tf ON tf.tripID = t.tripID 
-    LEFT JOIN Features AS f ON f.featureID = tf.featureID 
+    JOIN Trip_Features AS tf ON tf.tripID = t.tripID 
+    JOIN Features AS f ON f.featureID = tf.featureID 
     WHERE f.featureID = :featureID_selected_filter AND f.featureID = :featureID_selected_filter_2) 
 AS matching_Trips ON matching_Trips.tripID = trip_options.tripID;
 

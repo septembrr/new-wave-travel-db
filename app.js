@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
-app.set('port', 8000);
+app.set('port', 9035);
 
 
 app.use(express.static('public'));
@@ -29,18 +29,19 @@ app.get('/trips',function(req,res,next){
   let queryArgs = [];
 
   if(req.query.filter) {
-    query = "SELECT name, city, country, price, startDate, endDate, Features FROM (SELECT Trips.tripID, Trips.name, Trips.city, Trips.country, Trips.price, Trips.startDate, Trips.endDate, GROUP_CONCAT(DISTINCT Features.name ORDER BY Features.name ASC SEPARATOR ', ') as features FROM Trips LEFT JOIN Trip_Features on Trip_Features.tripID = Trips.tripID LEFT JOIN Features on Features.featureID = Trip_Features.featureID GROUP BY Trips.name) AS trip_options LEFT JOIN (SELECT t.tripID FROM Trips AS t LEFT JOIN Trip_Features AS tf ON tf.tripID = t.tripID LEFT JOIN Features AS f ON f.featureID = tf.featureID WHERE ";
+    query = "SELECT name, city, country, price, startDate, endDate, features FROM (SELECT Trips.tripID, Trips.name, Trips.city, Trips.country, Trips.price, Trips.startDate, Trips.endDate, GROUP_CONCAT(DISTINCT Features.name ORDER BY Features.name ASC SEPARATOR ', ') as features FROM Trips JOIN Trip_Features on Trip_Features.tripID = Trips.tripID JOIN Features on Features.featureID = Trip_Features.featureID GROUP BY Trips.name) AS trip_options JOIN (SELECT t.tripID FROM Trips AS t JOIN Trip_Features AS tf ON tf.tripID = t.tripID JOIN Features AS f ON f.featureID = tf.featureID WHERE ";
     
-    for(let i = 0; i < req.query.filter.length; i++) {
+    for(let i = 0; i < req.query.feature.length; i++) {
       queryArgs.push(req.query[i]);
-      query += " f.featureID = " + req.query.filter[i];
+      query += " f.featureID = " + req.query.feature[i];
 
-      if(i < req.query.filter.length - 1) {
+      if(i < req.query.feature.length - 1) {
         query += " AND ";
       }
     }
     
     query += ") AS matching_Trips ON matching_Trips.tripID = trip_options.tripID;";
+    console.log(query);
 
 
   } else {
