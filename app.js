@@ -258,8 +258,8 @@ app.get('/customize-staff', function(req, res, next) {
         pool.query(sql, [name, phone, email, role], function (err) {
             if (err) throw err;
             console.log("One record inserted");
+            res.render('customize-staff', context);
         });
-    res.render('customize-staff', context);
 });
 
 //Customize-student default page (need to change to allow update...)
