@@ -50,7 +50,7 @@ SELECT Trips.tripID, Trips.name FROM Trips;
 SELECT Students.studentID, Students.name FROM Students WHERE Students.trip IS NULL;
 
 -- get list of Trips based on selection of filter
-SELECT name, city, country, price, startDate, endDate, Features FROM
+SELECT name, city, country, price, startDate, endDate, features FROM
     (SELECT Trips.tripID, Trips.name, Trips.city, Trips.country, Trips.price, Trips.startDate, Trips.endDate, GROUP_CONCAT(DISTINCT Features.name ORDER BY Features.name ASC SEPARATOR ', ') as features FROM Trips 
     JOIN Trip_Features on Trip_Features.tripID = Trips.tripID 
     JOIN Features on Features.featureID = Trip_Features.featureID 
