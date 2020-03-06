@@ -126,7 +126,7 @@ app.get('/customize-staff', function(req, res, next) {
   }
 });
 
-//Customize-student default page (need to change to allow update...)
+//Customize-student page
 app.get('/customize-student', function(req, res, next){
   let context = {pageTitle: 'Add or Update Student'};
 
@@ -149,6 +149,7 @@ app.get('/customize-student', function(req, res, next){
 
       context.tripList = rows;
 
+      //Prepopulate page if user wants to update a student
       if (req.query.update){
         var currStudent = req.query.studentID;
 
@@ -168,6 +169,7 @@ app.get('/customize-student', function(req, res, next){
         });
       }
 
+      //Send UPDATE to db once user submits update request
       if (req.query.updateStudent){
         var updateID = req.query.studentID;
         var updateName = req.query.name;
@@ -195,6 +197,7 @@ app.get('/customize-student', function(req, res, next){
 
       }
 
+      //Add a student to the db
       if (req.query.add){
         var name = req.query.name;
         var university = req.query.university;
@@ -220,6 +223,7 @@ app.get('/customize-student', function(req, res, next){
           });
       }
 
+      //Default customize-student page
       else{
         res.render('customize-student', context);
       }
