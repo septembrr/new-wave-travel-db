@@ -20,6 +20,9 @@ SELECT Trips.tripID, Trips.name, Trips.city, Trips.country, Trips.price, Trips.s
    LEFT JOIN Features ON Trip_Features.featureID = Features.featureID
    GROUP BY Trips.name;
 
+-- get trip details for use to Edit Trip page
+SELECT name, city, country, price, startDate, endDate FROM Trips WHERE tripID = :trip_you_are_editing;
+
 -- get all Features, and their applicable Trips, for the Features page
 SELECT Features.name, GROUP_CONCAT(DISTINCT Trips.name ORDER BY Trips.name ASC SEPARATOR ', ') as trips
     FROM Features
@@ -30,6 +33,9 @@ SELECT Features.name, GROUP_CONCAT(DISTINCT Trips.name ORDER BY Trips.name ASC S
 -- get list of features for add trip dropdown
 -- get list of features for filter list on browse trips page
 SELECT Features.featureID, Features.name FROM Features;
+
+-- Get list of selected features for Update trip features checkboxes
+SELECT featureID FROM Trip_Features WHERE tripID = :trip_id_currently_editing;
 
 -- get a single trip's data for the Update Trip form
 SELECT Trips.name, Trips.city, Trips.country, Trips.price, Trips.startDate, Trips.endDate, Features.name 
@@ -50,7 +56,7 @@ SELECT Trips.tripID, Trips.name FROM Trips;
 SELECT Students.studentID, Students.name FROM Students WHERE Students.trip IS NULL;
 
 -- get list of Trips based on selection of filter
-SELECT name, city, country, price, startDate, endDate, features FROM
+SELECT tripID, name, city, country, price, startDate, endDate, features FROM
     (SELECT Trips.tripID, Trips.name, Trips.city, Trips.country, Trips.price, Trips.startDate, Trips.endDate, GROUP_CONCAT(DISTINCT Features.name ORDER BY Features.name ASC SEPARATOR ', ') as features FROM Trips 
     JOIN Trip_Features on Trip_Features.tripID = Trips.tripID 
     JOIN Features on Features.featureID = Trip_Features.featureID 

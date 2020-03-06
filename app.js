@@ -1,228 +1,62 @@
-var express = require('express');
+/*
+New Wave Travel Agency
+Study Abroad Student Management Database
+*/
 
+// Required modules
+var express = require('express');                                               // Express 
 var app = express();
-var handlebars = require('express-handlebars').create({defaultLayout:'main'});
+var handlebars = require('express-handlebars').create({defaultLayout:'main'});  // Handlebars template engine
 
-var mysql = require('mysql');
-var pool = mysql.createPool(require('./logins.js'));
+var mysql = require('mysql');                                                   // Mysql to access database
+var pool = mysql.createPool(require('./logins.js'));                            // Mysql login information
 
-var bodyParser = require('body-parser');
+var bodyParser = require('body-parser');                                        // Body parser for post requests
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+// Custom modules
+var trips = require('./includes/trips.js');
+
+// Set up express to use handlebars and appropriate PORT
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
 app.set('port', 9035);
 
-
+// Set public folder
 app.use(express.static('public'));
 
+// Root
 app.get('/',function(req,res,next){
     let context = {pageTitle: 'Homepage'};
     res.render('index', context);
 });
 
-app.get('/trips',function(req,res,next){
-  let context = {pageTitle: 'Trips'};
-
-  let query = "";
-  let queryArgs = [];
-
-  if(req.query.filter) {
-    query = "SELECT name, city, country, price, startDate, endDate, features FROM (SELECT Trips.tripID, Trips.name, Trips.city, Trips.country, Trips.price, Trips.startDate, Trips.endDate, GROUP_CONCAT(DISTINCT Features.name ORDER BY Features.name ASC SEPARATOR ', ') as features FROM Trips JOIN Trip_Features on Trip_Features.tripID = Trips.tripID JOIN Features on Features.featureID = Trip_Features.featureID GROUP BY Trips.name) AS trip_options JOIN (SELECT t.tripID FROM Trips AS t JOIN Trip_Features AS tf ON tf.tripID = t.tripID JOIN Features AS f ON f.featureID = tf.featureID WHERE ";
-    
-    for(let i = 0; i < req.query.feature.length; i++) {
-      queryArgs.push(req.query[i]);
-      query += " f.featureID = " + req.query.feature[i];
-
-      if(i < req.query.feature.length - 1) {
-        query += " AND ";
-      }
-    }
-    
-    query += ") AS matching_Trips ON matching_Trips.tripID = trip_options.tripID;";
-    console.log(query);
-
-
-  } else {
-    query = "SELECT Trips.name, Trips.city, Trips.country, Trips.price, Trips.startDate, Trips.endDate, GROUP_CONCAT(DISTINCT Features.name ORDER BY Features.name ASC SEPARATOR ', ')  as features FROM Trips LEFT JOIN Trip_Features ON Trips.tripID = Trip_Features.tripID LEFT JOIN Features ON Trip_Features.featureID = Features.featureID GROUP BY Trips.name;";
-  }
-
-
-  pool.query(query, queryArgs, function(err, rows, fields) {
-    if(err) {
-      next(err);
-      return;
-    }
-    context.tripList = rows;
-
-    query = "SELECT Features.featureID, Features.name FROM Features;";
-
-    pool.query(query, function(err, rows, fields) {
-      if(err) {
-        next(err);
-        return;
-      }
-      context.featureList = rows;
-
-      res.render('trips', context);
-    });
-  });
-});
-
-app.get('/features',function(req,res,next){
-  let context = {pageTitle: 'Features'};
-
-  let selectQuery = "SELECT Features.name, GROUP_CONCAT(DISTINCT Trips.name ORDER BY Trips.name ASC SEPARATOR ', ') as trips FROM Features LEFT JOIN Trip_Features ON Features.featureID = Trip_Features.featureID LEFT JOIN Trips ON Trip_Features.tripID = Trips.tripID GROUP BY Features.name;";
-
-  pool.query(selectQuery, function(err, rows, fields) {
-    if(err) {
-      next(err);
-      return;
-    }
-    context.featureList = rows;
-    res.render('features', context);
-  });
-});
-
-app.get('/customize-feature',function(req,res,next){
-  let context = {pageTitle: 'Add Feature'};
-
-  let selectQuery = "SELECT Trips.tripID, Trips.name FROM Trips;";
-
-  pool.query(selectQuery, function(err, rows, fields) {
-    if(err) {
-      next(err);
-      return;
-    }
-    context.tripList = rows;
-
-    // If there is an item to add
-    if (req.query.add) {  
-      let insertQuery = "INSERT INTO Features(name) VALUES(?);";
-      pool.query(insertQuery, [req.query.name], function(err, result) {
-        if(err) {
-          next(err);
-          return;
-        }
-
-        // If feature added to any trips
-        if(req.query.trip) {
-          let numTripFeatures = req.query.trip.length;
-          let tripFeatValues = [];
-                  
-          insertQuery = "INSERT INTO Trip_Features(tripID, featureID) VALUES ";
-          for(let i = 0; i < numTripFeatures; i++) {
-            insertQuery += "(?, ?)";
-            tripFeatValues.push(parseInt(req.query.trip[i]));
-            tripFeatValues.push(result.insertId);
-            if(i < numTripFeatures - 1) {
-              insertQuery += ", ";
-            }
-          }
-          insertQuery += ";";
-          
-          pool.query(insertQuery, tripFeatValues, function(err, result){
-            if(err) {
-              next(err);
-              return;
-            }
-  
-            context.message = "Feature added successfully.";
-  
-            res.render('customize-feature', context);
-          });
-        } else {
-          context.message = "Feature added successfully.";
-          res.render('customize-feature', context);
-        }
-      });
-
+// Browse Trips
+app.get('/trips', function(req, res, next) {
+    if(req.query.delete) {
+      trips.deleteTrip(req, res, next);
     } else {
-      res.render('customize-feature', context);
+      trips.displayTrips(req, res, next);
     }
-  });
 
 });
 
-app.get('/customize-trip',function(req,res,next){
-  let context = {pageTitle: 'Add or Edit Trip'};
+// See all Features
+app.get('/features', require('./includes/features.js').features);
 
-  let query = "SELECT Students.studentID, Students.name FROM Students WHERE Students.trip IS NULL;";
+// Customize Features
+app.get('/customize-feature', require('./includes/features.js').customizeFeatures);
 
-  pool.query(query, function(err, rows, fields) {
-    if(err) {
-      next(err);
-      return;
-    }
-    context.studentList = rows;
-
-    query = "SELECT Features.featureID, Features.name FROM Features;";
-
-    pool.query(query, function(err, rows, fields){
-      if(err) {
-        next(err);
-        return;
-      }
-      context.featureList = rows;
-
-      if(req.query.add) {
-        query = "INSERT INTO Trips(name, city, country, price, startDate, endDate) VALUES(?, ?, ?, ?, ?, ?); ";
-  
-        pool.query(query, [
-          req.query.title,
-          req.query.city,
-          req.query.country,
-          req.query.price,
-          req.query.startDate,
-          req.query.endDate
-        ], function(err, result) {
-          if(err) {
-            next(err);
-            return;
-          }
-
-          // If feature added to any trips
-          if(req.query.feature) {
-            let numTripFeatures = req.query.feature.length;
-            let tripFeatValues = [];
-                    
-            insertQuery = "INSERT INTO Trip_Features(tripID, featureID) VALUES ";
-            for(let i = 0; i < numTripFeatures; i++) {
-              insertQuery += "(?, ?)";
-              tripFeatValues.push(result.insertId);
-              tripFeatValues.push(parseInt(req.query.feature[i]));
-              if(i < numTripFeatures - 1) {
-                insertQuery += ", ";
-              }
-            }
-            insertQuery += ";";
-            
-            pool.query(insertQuery, tripFeatValues, function(err, result){
-              if(err) {
-                next(err);
-                return;
-              }
-    
-              context.message = "Trip added successfully.";
-    
-              res.render('customize-trip', context);
-            });
-          } else {
-            context.message = "Trip added successfully.";
-            res.render('customize-trip', context);
-          }
-
-        });
-
-      } else {
-
-        res.render('customize-trip', context);
-      }
-
-    });
-
-  });
+// Customize Trips
+app.get('/customize-trip',function(req, res, next) {
+  if(req.query.update) {
+    trips.getEditDetails(req, res, next);
+  } else if (req.query.add) {
+    trips.addTrip(req, res, next);
+  } else {
+    trips.displayCustomizeTrip(req, res, next);
+  }
 });
 
 //Index route
@@ -394,11 +228,13 @@ app.get('/customize-student', function(req, res, next){
   })
 });
 
+// 404 Page Not Found Error
 app.use(function(req,res){
   res.status(404);
   res.render('404');
 });
 
+// 500 Server Error
 app.use(function(err, req, res, next){
   console.error(err.stack);
   res.type('plain/text');
@@ -406,6 +242,7 @@ app.use(function(err, req, res, next){
   res.render('500');
 });
 
+// Start the app
 app.listen(app.get('port'), function(){
   console.log('Express started; press Ctrl-C to terminate.');
 });

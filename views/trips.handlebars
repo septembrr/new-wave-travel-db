@@ -59,13 +59,8 @@
                             <td>{{this.endDate}}</td>
                             <td>{{this.features}}</td>
                             <td>
-                                <form action="#" method="get">
-                                    <select class="form-control">
-                                        <option value="">Select Action</option>
-                                        <option value="{{this.tripID}}">Delete</option>
-                                        <option value="{{this.tripID}}">Update</option>
-                                    </select>
-                                </form>
+                                <a href="/trips?delete=1&tripID={{this.tripID}}"><button type="button" class="btn btn-danger">Delete</button></a>
+                                <a href="/customize-trip?update=1&tripID={{this.tripID}}"><button type="button" class="btn btn-info">Update</button></a>
                             </td>
                         </tr>
                     {{/each}}

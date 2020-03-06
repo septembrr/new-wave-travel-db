@@ -19,19 +19,19 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label class="sr-only" for="title">Title</label>
-                            <input type="text" id="title" name="title" class="form-control" placeholder="Title*" required />
+                            <input type="text" id="title" name="title" class="form-control" placeholder="Title*" value="{{tripDetails.name}}" required />
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
                             <label class="sr-only" for="city">City</label>
-                            <input type="text" id="city" name="city" class="form-control" placeholder="City*" required />
+                            <input type="text" id="city" name="city" class="form-control" placeholder="City*" value="{{tripDetails.city}}"required />
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
                             <label class="sr-only" for="country">Country</label>
-                            <input type="text" id="country" name="country" class="form-control" placeholder="Country*" required />
+                            <input type="text" id="country" name="country" class="form-control" placeholder="Country*" value="{{tripDetails.country}}" required />
                         </div>
                     </div>
                 </div>
@@ -40,7 +40,7 @@
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-addon">$</div>
-                                <input type="number" id="price" name="price" class="form-control" placeholder="Price*" required />
+                                <input type="number" id="price" name="price" class="form-control" placeholder="Price*" value="{{tripDetails.price}}" required />
                                 <div class="input-group-addon">.00</div>
                             </div>
                         </div>
@@ -48,14 +48,14 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label class="sr-only" for="startDate">Start Date</label>
-                            <input type="date" id="startDate" name="startDate" class="form-control" placeholder="Start Date*" required />
+                            <input type="date" id="startDate" name="startDate" class="form-control" placeholder="Start Date*" value="{{tripDetails.startDate}}" required />
                             <span class="help-block"><strong>Start Date*</strong></span>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
                             <label class="sr-only" for="endDate">End Date</label>
-                            <input type="date" id="endDate" name="endDate" class="form-control" placeholder="End Date*" required />
+                            <input type="date" id="endDate" name="endDate" class="form-control" placeholder="End Date*" value="{{tripDetails.endDate}}" required />
                             <span class="help-block"><strong>End Date*</strong></span>
                         </div>
                     </div>
