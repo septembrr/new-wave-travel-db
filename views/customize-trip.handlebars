@@ -2,8 +2,7 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-12">
-            <h1>Add Trip</h1>
-            <p>Add a new trip below.</p>
+            <h1>{{pageTitle}}</h1>
             {{#if message}}
                 <div class="alert alert-success" role="alert">
                     {{message}}
@@ -48,14 +47,14 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label class="sr-only" for="startDate">Start Date</label>
-                            <input type="date" id="startDate" name="startDate" class="form-control" placeholder="Start Date*" value="{{tripDetails.startDate}}" required />
+                            <input type="date" id="startDate" name="startDate" class="form-control" placeholder="Start Date*" value="{{formatDate tripDetails.startDate "YYYY-MM-DD"}}" required />
                             <span class="help-block"><strong>Start Date*</strong></span>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
                             <label class="sr-only" for="endDate">End Date</label>
-                            <input type="date" id="endDate" name="endDate" class="form-control" placeholder="End Date*" value="{{tripDetails.endDate}}" required />
+                            <input type="date" id="endDate" name="endDate" class="form-control" placeholder="End Date*" value="{{formatDate tripDetails.endDate "YYYY-MM-DD"}}" required />
                             <span class="help-block"><strong>End Date*</strong></span>
                         </div>
                     </div>
@@ -68,8 +67,13 @@
                                 {{#each featureList}}
                                     <div class="checkbox">
                                         <label>
-                                            <input type="checkbox" id="{{this.featureID}}" name="feature" value="{{this.featureID}}" />
-                                            {{this.name}}
+                                            {{#ifPresentInArray ../featuresSelected this.featureID }}
+                                                <input type="checkbox" id="{{this.featureID}}" name="feature[]" value="{{this.featureID}}" checked />
+                                                {{this.name}}
+                                            {{else}}
+                                                <input type="checkbox" id="{{this.featureID}}" name="feature[]" value="{{this.featureID}}" />
+                                                {{this.name}}
+                                            {{/ifPresentInArray}}
                                         </label>
                                     </div>
                                 {{/each}}
@@ -85,7 +89,7 @@
                                 {{#each studentList}}
                                     <div class="checkbox">
                                         <label>
-                                            <input type="checkbox" id="{{this.studentID}}" name="student" value="{{this.studentID}}" />
+                                            <input type="checkbox" id="{{this.studentID}}" name="student[]" value="{{this.studentID}}" />
                                             {{this.name}}
                                         </label>
                                     </div>
@@ -96,8 +100,9 @@
                         </div>
                     </div>
                 </div>
+                <input type="hidden" name="tripID" value="{{tripID}}" />
                 <div class="form-group">
-                    <input type="submit" name="add" value="Add" class="btn btn-primary" />
+                    <input type="submit" name="{{formAction}}" value="{{formAction}}" class="btn btn-primary" />
                 </div>
             </form>
         </div>

@@ -8,7 +8,7 @@ var pool = mysql.createPool(require('../logins.js'));
 function features(req,res,next){
     let context = {pageTitle: 'Features'};
 
-    let selectQuery = "SELECT Features.name, GROUP_CONCAT(DISTINCT Trips.name ORDER BY Trips.name ASC SEPARATOR ', ') as trips FROM Features LEFT JOIN Trip_Features ON Features.featureID = Trip_Features.featureID LEFT JOIN Trips ON Trip_Features.tripID = Trips.tripID GROUP BY Features.name;";
+    let selectQuery = "SELECT Features.name, GROUP_CONCAT(Trips.name ORDER BY Trips.name ASC SEPARATOR ', ') as trips FROM Features LEFT JOIN Trip_Features ON Features.featureID = Trip_Features.featureID LEFT JOIN Trips ON Trip_Features.tripID = Trips.tripID GROUP BY Features.name, Features.featureID;";
 
     pool.query(selectQuery, function(err, rows, fields) {
         if(err) {

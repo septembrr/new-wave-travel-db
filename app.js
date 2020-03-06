@@ -6,7 +6,13 @@ Study Abroad Student Management Database
 // Required modules
 var express = require('express');                                               // Express 
 var app = express();
-var handlebars = require('express-handlebars').create({defaultLayout:'main'});  // Handlebars template engine
+var handlebars = require('express-handlebars').create({
+  defaultLayout:'main',
+  helpers: {
+    formatDate: formatDate,
+    ifPresentInArray: ifPresentInArray
+  }
+});  // Handlebars template engine
 
 var mysql = require('mysql');                                                   // Mysql to access database
 var pool = mysql.createPool(require('./logins.js'));                            // Mysql login information
@@ -14,6 +20,8 @@ var pool = mysql.createPool(require('./logins.js'));                            
 var bodyParser = require('body-parser');                                        // Body parser for post requests
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+var moment = require('moment');                                                 // Moment.js for date formatting
 
 // Custom modules
 var trips = require('./includes/trips.js');
@@ -26,6 +34,22 @@ app.set('port', 9035);
 // Set public folder
 app.use(express.static('public'));
 
+// Describe Handlebars Helpers
+function formatDate(date, format) {
+  if(date) {
+    var formattedDate = moment(date);
+    return formattedDate.format(format);
+  }
+}
+
+function ifPresentInArray(array, value, options) {
+  if(array && array.indexOf(value) >= 0) {
+    return options.fn(this);
+  } else {
+    return options.inverse(this);
+  }
+}
+
 // Root
 app.get('/',function(req,res,next){
     let context = {pageTitle: 'Homepage'};
@@ -37,7 +61,7 @@ app.get('/trips', function(req, res, next) {
     if(req.query.delete) {
       trips.deleteTrip(req, res, next);
     } else {
-      trips.displayTrips(req, res, next);
+      trips.displayTrips(req, res, next, {});
     }
 
 });
@@ -50,12 +74,14 @@ app.get('/customize-feature', require('./includes/features.js').customizeFeature
 
 // Customize Trips
 app.get('/customize-trip',function(req, res, next) {
-  if(req.query.update) {
-    trips.getEditDetails(req, res, next);
-  } else if (req.query.add) {
+  if(req.query.edit) {
+    trips.getEditDetails(req, res, next, {});
+  } else if (req.query.Add) {
     trips.addTrip(req, res, next);
+  } else if (req.query.Update) {
+    trips.updateTrip(req, res, next);
   } else {
-    trips.displayCustomizeTrip(req, res, next);
+    trips.displayCustomizeTrip(req, res, next, {pageTitle: 'Add Trip'});
   }
 });
 

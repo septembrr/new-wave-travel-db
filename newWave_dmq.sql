@@ -18,17 +18,17 @@ SELECT Trips.tripID, Trips.name, Trips.city, Trips.country, Trips.price, Trips.s
    FROM Trips
    LEFT JOIN Trip_Features ON Trips.tripID = Trip_Features.tripID
    LEFT JOIN Features ON Trip_Features.featureID = Features.featureID
-   GROUP BY Trips.name;
+   GROUP BY Trips.name, Trips.tripID;
 
 -- get trip details for use to Edit Trip page
 SELECT name, city, country, price, startDate, endDate FROM Trips WHERE tripID = :trip_you_are_editing;
 
 -- get all Features, and their applicable Trips, for the Features page
-SELECT Features.name, GROUP_CONCAT(DISTINCT Trips.name ORDER BY Trips.name ASC SEPARATOR ', ') as trips
+SELECT Features.name, GROUP_CONCAT(Trips.name ORDER BY Trips.name ASC SEPARATOR ', ') as trips
     FROM Features
     LEFT JOIN Trip_Features ON Features.featureID = Trip_Features.featureID
     LEFT JOIN Trips ON Trip_Features.tripID = Trips.tripID
-    GROUP BY Features.name;
+    GROUP BY Features.name, Features.featureID;
 
 -- get list of features for add trip dropdown
 -- get list of features for filter list on browse trips page
@@ -56,16 +56,16 @@ SELECT Trips.tripID, Trips.name FROM Trips;
 SELECT Students.studentID, Students.name FROM Students WHERE Students.trip IS NULL;
 
 -- get list of Trips based on selection of filter
-SELECT tripID, name, city, country, price, startDate, endDate, features FROM
-    (SELECT Trips.tripID, Trips.name, Trips.city, Trips.country, Trips.price, Trips.startDate, Trips.endDate, GROUP_CONCAT(DISTINCT Features.name ORDER BY Features.name ASC SEPARATOR ', ') as features FROM Trips 
-    JOIN Trip_Features on Trip_Features.tripID = Trips.tripID 
-    JOIN Features on Features.featureID = Trip_Features.featureID 
-    GROUP BY Trips.name) 
+SELECT trip_options.tripID, name, city, country, price, startDate, endDate, features FROM
+    (SELECT Trips.tripID, Trips.name, Trips.city, Trips.country, Trips.price, Trips.startDate, Trips.endDate, GROUP_CONCAT( Features.name ORDER BY Features.name ASC SEPARATOR ', ') as features FROM Trips 
+    LEFT JOIN Trip_Features on Trip_Features.tripID = Trips.tripID 
+    LEFT JOIN Features on Features.featureID = Trip_Features.featureID 
+    GROUP BY Trips.name, Trips.tripID) 
 AS trip_options 
 JOIN 
     (SELECT t.tripID FROM Trips AS t 
-    JOIN Trip_Features AS tf ON tf.tripID = t.tripID 
-    JOIN Features AS f ON f.featureID = tf.featureID 
+    LEFT JOIN Trip_Features AS tf ON tf.tripID = t.tripID 
+    LEFT JOIN Features AS f ON f.featureID = tf.featureID 
     WHERE f.featureID = :featureID_selected_filter AND f.featureID = :featureID_selected_filter_2) 
 AS matching_Trips ON matching_Trips.tripID = trip_options.tripID;
 
@@ -92,12 +92,12 @@ DELETE FROM Trips WHERE tripID = :tripID_input_selected_in_form;
 DELETE FROM Trip_Features WHERE tripID = :tripID_input_currently_editing;
 
 -- update a student based on submission from update student form
-UPDATE TABLE Students SET name = :name_input, university = :university_input, phone = :phone_input, email = :email_input, trip = :tripID_input_selected, Staff = :StaffID_input_selected) WHERE studentID = :studentID_input_being_edited;
+UPDATE Students SET name = :name_input, university = :university_input, phone = :phone_input, email = :email_input, trip = :tripID_input_selected, Staff = :StaffID_input_selected) WHERE studentID = :studentID_input_being_edited;
 -- if no trip or Staff selected, that part of the query would be left out.
 
 -- update a trip based on submission from update trip form
-UPDATE TABLE Trips SET name = :name_input, city = :city_input, country = :country_input, price = :price_input, startDate = :startDate_input, endDate = :endDate_input WHERE tripID = :tripID_input_selected;
+UPDATE Trips SET name = :name_input, city = :city_input, country = :country_input, price = :price_input, startDate = :startDate_input, endDate = :endDate_input WHERE tripID = :tripID_input_selected;
 -- will execute the remove trip and feature association query, and then re-add the trip associations
 
 -- update a student based on a trip added from the Update Trips page
-UPDATE TABLE Students SET trip = :tripID_selected_in_trip_form WHERE studentID = :studentID_input_selected OR studentID = :studentID_input_selected_2;
+UPDATE Students SET trip = :tripID_selected_in_trip_form WHERE studentID = :studentID_input_selected OR studentID = :studentID_input_selected_2;

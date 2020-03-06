@@ -5,6 +5,11 @@
             <h1>Trips</h1>
             <p>Welcome to the trips portal! See what trips are upcoming and filter by feature.</p>
             <p>Want to add a new trip? <a href="/customize-trip">Add a new trip here.</a></p>
+            {{#if message}}
+                <div class="alert alert-success" role="alert">
+                    {{message}}
+                </div>
+            {{/if}}
             <br>
         </div>
     </div>
@@ -33,6 +38,7 @@
                 </div>
                 <input type="submit" name="filter" value="Filter" class="btn btn-primary" />
             </form>
+            <a href="/trips"><button type="button" class="btn btn-secondary">Reset</button></a>
         </div>
         <div class="col-md-9">
             <table class="table table-hover table-striped">
@@ -49,21 +55,27 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {{#each tripList}}
-                        <tr>
-                            <td>{{this.name}}</td>
-                            <td>{{this.city}}</td>
-                            <td>{{this.country}}</td>
-                            <td>${{this.price}}</td>
-                            <td>{{this.startDate}}</td>
-                            <td>{{this.endDate}}</td>
-                            <td>{{this.features}}</td>
-                            <td>
-                                <a href="/trips?delete=1&tripID={{this.tripID}}"><button type="button" class="btn btn-danger">Delete</button></a>
-                                <a href="/customize-trip?update=1&tripID={{this.tripID}}"><button type="button" class="btn btn-info">Update</button></a>
-                            </td>
-                        </tr>
-                    {{/each}}
+                    {{#if tripList}}
+                        {{#each tripList}}
+                            <tr>
+                                <td>{{this.name}}</td>
+                                <td>{{this.city}}</td>
+                                <td>{{this.country}}</td>
+                                <td>${{this.price}}</td>
+                                <td>{{formatDate this.startDate "MM/DD/YYYY"}}</td>
+                                <td>{{formatDate this.endDate "MM/DD/YYYY"}}</td>
+                                <td>{{this.features}}</td>
+                                <td>
+                                    <a href="/trips?delete=1&tripID={{this.tripID}}"><button type="button" class="btn btn-danger">Delete</button></a>
+                                    <a href="/customize-trip?edit=1&tripID={{this.tripID}}"><button type="button" class="btn btn-info">Update</button></a>
+                                </td>
+                            </tr>
+                        {{/each}}
+                    {{else}}
+                        <div class="alert alert-warning" role="alert">
+                            Sorry, no trips match your criteria.
+                        </div>
+                    {{/if}}
                 </tbody>
             </table>
         </div>
