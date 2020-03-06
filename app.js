@@ -278,7 +278,7 @@ app.get('/customize-staff', function(req, res, next) {
     var role = req.query.role;
 
     var sql = "INSERT INTO Staff (name, phone, email, type) VALUES (?, ?, ?, ?);";
-    pool.query(sql, [name, phone, email, role], function (err) {
+    pool.query(query, [name, phone, email, role], function (err) {
       if(err){                                                                    
         next(err);
         return;}
@@ -314,6 +314,53 @@ app.get('/customize-student', function(req, res, next){
       }
 
       context.tripList = rows;
+
+      if (req.query.update){
+        var currStudent = req.query.studentID;
+
+        query = "SELECT Students.studentID, Students.name AS studentName, Students.university, Students.phone, Students.email, Students.staff, Students.trip, Trips.name AS tripsName, Staff.name AS staffName FROM Students LEFT JOIN Trips ON Students.trip = Trips.tripID LEFT JOIN Staff ON Students.staff = Staff.staffID WHERE Students.studentID = ?;";
+
+        pool.query(query, [currStudent], function(err, rows, fields){
+          if(err){
+            next(err);
+            return;
+          }
+
+          context.studentInfo = rows[0];
+
+          context.jsscripts = ["selectedStaff.js", "selectedTrip.js"];
+          
+          res.render('customize-student', context);
+        });
+      }
+
+      if (req.query.updateStudent){
+        var updateID = req.query.studentID;
+        var updateName = req.query.name;
+        var updateUniversity = req.query.university;
+        var updatePhone = req.query.phone;
+        var updateEmail = req.query.email;
+        var updateTrip = req.query.trip;
+        if(updateTrip == "NULL"){
+          updateTrip = null;
+        }
+        var updateStaff = req.query.staff;
+        if(updateStaff == "NULL"){
+          updateStaff = null;
+        }
+
+        var sql = "UPDATE TABLE Students SET name = ?, university = ?, phone = ?, email = ?, trip = ?, staff = ? WHERE studentID = ?;";
+        pool.query(sql, [updateName, updateUniversity, updatePhone, updateEmail, updateTrip, updateStaff, updateID], function (err) {
+          if(err){                                                                    
+            next(err);
+            return;}
+            
+            context.message = "Student updated successfully.";
+            res.render('students', context);
+        });
+
+      }
+
       if (req.query.add){
         var name = req.query.name;
         var university = req.query.university;
