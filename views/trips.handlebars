@@ -29,8 +29,13 @@
                         {{#each featureList}}
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" id="{{this.featureID}}" name="feature[]" value="{{this.featureID}}" />
-                                    {{this.name}}
+                                    {{#ifPresentInArray ../filterActive this.featureID }}
+                                        <input type="checkbox" id="{{this.featureID}}" name="feature[]" value="{{this.featureID}}" checked />
+                                        {{this.name}}
+                                    {{else}}
+                                        <input type="checkbox" id="{{this.featureID}}" name="feature[]" value="{{this.featureID}}" />
+                                        {{this.name}}
+                                    {{/ifPresentInArray}}
                                 </label>
                             </div>
                         {{/each}}

@@ -25,6 +25,7 @@ var moment = require('moment');                                                 
 
 // Custom modules
 var trips = require('./includes/trips.js');
+var features = require('./includes/features.js');
 
 // Set up express to use handlebars and appropriate PORT
 app.engine('handlebars', handlebars.engine);
@@ -67,7 +68,13 @@ app.get('/trips', function(req, res, next) {
 });
 
 // See all Features
-app.get('/features', require('./includes/features.js').features);
+app.get('/features', function(req, res, next) {
+  if(req.query.delete) {
+    features.deleteFeature(req, res, next);
+  } else {
+    features.displayFeatures(req, res, next, {});
+  }
+});
 
 // Customize Features
 app.get('/customize-feature', require('./includes/features.js').customizeFeatures);

@@ -5,6 +5,11 @@
             <h1>Features</h1>
             <p>View the features for all trips.</p>
             <p>Want to add a new feature? <a href="/customize-feature">Add a new feature here.</a></p>
+            {{#if message}}
+                <div class="alert alert-success" role="alert">
+                    {{message}}
+                </div>
+            {{/if}}
             <br>
         </div>
     </div>
@@ -15,6 +20,7 @@
                     <tr>
                         <th>Feature Name</th>
                         <th>Trips Found In</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -22,6 +28,7 @@
                     <tr>
                         <td>{{this.name}}</td>
                         <td>{{this.trips}}</td>
+                        <td><a href="/features?delete=1&featureID={{this.featureID}}"><button type="button" class="btn btn-danger">Delete</button></a></td>
                     </tr>
                     {{/each}}
                 </tbody>

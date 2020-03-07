@@ -24,7 +24,7 @@ SELECT Trips.tripID, Trips.name, Trips.city, Trips.country, Trips.price, Trips.s
 SELECT name, city, country, price, startDate, endDate FROM Trips WHERE tripID = :trip_you_are_editing;
 
 -- get all Features, and their applicable Trips, for the Features page
-SELECT Features.name, GROUP_CONCAT(Trips.name ORDER BY Trips.name ASC SEPARATOR ', ') as trips
+SELECT Features.featureID, Features.name, GROUP_CONCAT(Trips.name ORDER BY Trips.name ASC SEPARATOR ', ') as trips
     FROM Features
     LEFT JOIN Trip_Features ON Features.featureID = Trip_Features.featureID
     LEFT JOIN Trips ON Trip_Features.tripID = Trips.tripID
@@ -63,10 +63,12 @@ SELECT trip_options.tripID, name, city, country, price, startDate, endDate, feat
     GROUP BY Trips.name, Trips.tripID) 
 AS trip_options 
 JOIN 
-    (SELECT t.tripID FROM Trips AS t 
+    (SELECT t.tripID COUNT(*) as count FROM Trips AS t 
     LEFT JOIN Trip_Features AS tf ON tf.tripID = t.tripID 
     LEFT JOIN Features AS f ON f.featureID = tf.featureID 
-    WHERE f.featureID = :featureID_selected_filter AND f.featureID = :featureID_selected_filter_2) 
+    WHERE f.featureID = :featureID_selected_filter OR f.featureID = :featureID_selected_filter_2
+    GROUP BY t.tripID
+    HAVING count = :input_number_of_filter_selections) 
 AS matching_Trips ON matching_Trips.tripID = trip_options.tripID;
 
 -- insert new student
@@ -87,9 +89,15 @@ INSERT INTO Staff(name, phone, email, type) VALUES(:name_input, :phone_input, :e
 -- delete one trip
 DELETE FROM Trips WHERE tripID = :tripID_input_selected_in_form;
 
+-- delete one feature
+DELETE FROM Features WHERE featureID = :featureID_input_selected;
+
 -- remove an association of a trip and feature
 -- executed when Trips are edited and a feature is removed
 DELETE FROM Trip_Features WHERE tripID = :tripID_input_currently_editing;
+
+-- executed when Feature is deleted from Features page
+DELETE FROM Trip_Features WHERE featureID = :featureID_input_selected;
 
 -- update a student based on submission from update student form
 UPDATE Students SET name = :name_input, university = :university_input, phone = :phone_input, email = :email_input, trip = :tripID_input_selected, Staff = :StaffID_input_selected) WHERE studentID = :studentID_input_being_edited;

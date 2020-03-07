@@ -16,25 +16,34 @@ function displayTrips (req,res,next,context){
 
     // If the filter is active
     if(req.query.filter) {
-        query = "SELECT trip_options.tripID, name, city, country, price, startDate, endDate, features FROM (SELECT Trips.tripID, Trips.name, Trips.city, Trips.country, Trips.price, Trips.startDate, Trips.endDate, GROUP_CONCAT(Features.name ORDER BY Features.name ASC SEPARATOR ', ') as features FROM Trips LEFT JOIN Trip_Features on Trip_Features.tripID = Trips.tripID LEFT JOIN Features on Features.featureID = Trip_Features.featureID GROUP BY Trips.name, Trips.tripID) AS trip_options JOIN (SELECT t.tripID FROM Trips AS t LEFT JOIN Trip_Features AS tf ON tf.tripID = t.tripID LEFT JOIN Features AS f ON f.featureID = tf.featureID WHERE ";
+        query = "SELECT trip_options.tripID, name, city, country, price, startDate, endDate, features FROM (SELECT Trips.tripID, Trips.name, Trips.city, Trips.country, Trips.price, Trips.startDate, Trips.endDate, GROUP_CONCAT(Features.name ORDER BY Features.name ASC SEPARATOR ', ') as features FROM Trips LEFT JOIN Trip_Features on Trip_Features.tripID = Trips.tripID LEFT JOIN Features on Features.featureID = Trip_Features.featureID GROUP BY Trips.name, Trips.tripID) AS trip_options JOIN (SELECT t.tripID, COUNT(*) as count FROM Trips AS t LEFT JOIN Trip_Features AS tf ON tf.tripID = t.tripID LEFT JOIN Features AS f ON f.featureID = tf.featureID WHERE ";
 
         // If no features were selected
         if(!req.query.feature) {
             query += " f.featureID IS NULL ";
+            query += " GROUP BY t.tripID ";
         } 
         // else if features were selected
         else {
+            // Get active features so filter selection persists
+            context.filterActive = [];
             for(let i = 0; i < req.query.feature.length; i++) {
-                queryArgs.push(req.query[i]);
-                query += " f.featureID = " + req.query.feature[i];
+                context.filterActive.push(parseInt(req.query.feature[i]));
+            }
+
+            for(let i = 0; i < req.query.feature.length; i++) {
+                queryArgs.push(req.query.feature[i]);
+                query += " f.featureID = ? ";
     
                 if(i < req.query.feature.length - 1) {
-                    query += " AND ";
+                    query += " OR ";
                 }
             }
+            query += " GROUP BY t.tripID HAVING count = ? ";
+            queryArgs.push(req.query.feature.length);
         }
         
-        query += ") AS matching_Trips ON matching_Trips.tripID = trip_options.tripID;";
+        query += " ) AS matching_Trips ON matching_Trips.tripID = trip_options.tripID;";
 
     } 
     // If no filter is active, show all trips
