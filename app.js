@@ -72,10 +72,16 @@ app.get('/trips', function(req, res, next) {
 
 // See all Features
 app.get('/features', function(req, res, next) {
-  if(req.query.delete) {
-    features.deleteFeature(req, res, next);
-  } else {
-    features.displayFeatures(req, res, next, {});
+  try {
+    if(req.query.delete) {
+      features.deleteFeature(req, res, next);
+    } else {
+      features.displayFeatures(req, res, next, {});
+    }
+  } catch {
+    console.log('caught it yo');
+    next(err);
+    return;
   }
 });
 

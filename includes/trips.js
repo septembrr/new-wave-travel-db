@@ -52,20 +52,14 @@ function displayTrips (req,res,next,context){
     }
 
     pool.query(query, queryArgs, function(err, rows, fields) {
-        if(err) {
-            next(err);
-            return;
-        }
+        if(err) { return next(); }
         context.tripList = rows;
 
         // Get list of features for filter list
         query = "SELECT Features.featureID, Features.name FROM Features;";
 
         pool.query(query, function(err, rows, fields) {
-            if(err) {
-                next(err);
-                return;
-            }
+            if(err) { return next(); }
             context.featureList = rows;
 
             // Render the trips page
@@ -89,19 +83,13 @@ function deleteTrip(req, res, next) {
         let query = "DELETE FROM Trip_Features WHERE tripID = ?";
 
         pool.query(query, [req.query.tripID], function(err, result){
-            if(err){
-                next(err);
-                return;
-            }
+            if(err) { return next(); }
 
             // Delete from main trips table
             query = "DELETE FROM Trips WHERE tripID = ?";
 
             pool.query(query, [req.query.tripID], function(err, result) {
-                if(err) {
-                    next(err);
-                    return;
-                }
+                if(err) { return next(); }
 
                 let context = {};
                 context.message = "Trip deleted successfully.";
@@ -133,20 +121,14 @@ function displayCustomizeTrip(req,res,next,context){
     let query = "SELECT Students.studentID, Students.name FROM Students WHERE Students.trip IS NULL;";
 
     pool.query(query, function(err, rows, fields) {
-        if(err) {
-            next(err);
-            return;
-        }
+        if(err) { return next(); }
         context.studentList = rows;
 
         // Get features for checkboxes
         query = "SELECT Features.featureID, Features.name FROM Features;";
 
         pool.query(query, function(err, rows, fields){
-            if(err) {
-                next(err);
-                return;
-            }
+            if(err) { return next(); }
             context.featureList = rows;
 
             // Render the page
@@ -178,10 +160,7 @@ function addTrip(req, res, next) {
     req.query.startDate,
     req.query.endDate
     ], function(err, result) {
-        if(err) {
-            next(err);
-            return;
-        }
+        if(err) { return next(); }
 
         let newTripID = result.insertId;
 
@@ -204,10 +183,7 @@ function addTrip(req, res, next) {
             query += ";";
             
             pool.query(query, tripFeatValues, function(err, result){
-                if(err) {
-                    next(err);
-                    return;
-                }
+                if(err) { return next(); }
 
                 let numStudents = req.query.student.length;
                 let studentValues = [ newTripID ];
@@ -225,10 +201,7 @@ function addTrip(req, res, next) {
                 query += ";";
                 
                 pool.query(query, studentValues, function(err, result){
-                    if(err) {
-                        next(err);
-                        return;
-                    }
+                    if(err) { return next(); }
 
                     context.message = "Trip added successfully.";
             
@@ -257,10 +230,7 @@ function addTrip(req, res, next) {
             query += ";";
             
             pool.query(query, tripFeatValues, function(err, result){
-                if(err) {
-                    next(err);
-                    return;
-                }
+                if(err) { return next(); }
 
                 context.message = "Trip added successfully.";
         
@@ -287,10 +257,7 @@ function addTrip(req, res, next) {
             query += ";";
             
             pool.query(query, studentValues, function(err, result){
-                if(err) {
-                    next(err);
-                    return;
-                }
+                if(err) { return next(); }
 
                 context.message = "Trip added successfully.";
         
@@ -324,10 +291,7 @@ function getEditDetails(req, res, next, context) {
     let query = "SELECT name, city, country, price, startDate, endDate FROM Trips WHERE tripID = ?";
 
     pool.query(query, [req.query.tripID], function(err, rows, fields){
-        if(err) {
-            next(err);
-            return;
-        }
+        if(err) { return next(); }
         if(rows.length > 0) {
             context.tripDetails = rows[0];
         }
@@ -336,10 +300,7 @@ function getEditDetails(req, res, next, context) {
         query = "SELECT featureID FROM Trip_Features WHERE tripID = ?";
 
         pool.query(query, [req.query.tripID], function(err, rows, fields){
-            if(err) {
-                next(err);
-                return;
-            }
+            if(err) { return next(); }
 
             context.featuresSelected = [];
             for(let i = 0; i < rows.length; i++) {
@@ -375,29 +336,21 @@ function updateTrip(req, res, next) {
     req.query.endDate,
     req.query.tripID
     ], function(err, result) {
-        if(err) {
-            next(err);
-            return;
-        }
+        if(err) { return next(); }
 
-        // If features or students are selected
-        if(req.query.feature && req.query.student) {
+        // Delete all existing intersections in Trip_Features table
+        query = "DELETE FROM Trip_Features WHERE tripID = ?;";
 
-            // Delete all existing intersections in Trip_Features table
-            query = "DELETE FROM Trip_Features WHERE tripID = ?;";
+        pool.query(query, [req.query.tripID], function(err, result) {
+            if(err) { return next(); }
 
-            pool.query(query, [req.query.tripID], function(err, result) {
-                if(err) {
-                    next(err);
-                    return;
-                }
-                
+            // If features and students are selected
+            if(req.query.feature && req.query.student) {
                 let numTripFeatures = req.query.feature.length;
                 let tripFeatValues = [];
-                  
+                
                 // Insert new associations into Trip_Features table
                 query = "INSERT INTO Trip_Features(tripID, featureID) VALUES ";
-    
                 for(let i = 0; i < numTripFeatures; i++) {
                     query += "(?, ?)";
                     tripFeatValues.push(req.query.tripID);
@@ -407,18 +360,16 @@ function updateTrip(req, res, next) {
                     }
                 }
                 query += ";";
+
                 pool.query(query, tripFeatValues, function(err, result){
-                    if(err) {
-                        next(err);
-                        return;
-                    }
-    
+                    if(err) { return next(); }
+        
                     let numStudents = req.query.student.length;
                     let studentValues = [ req.query.tripID ];
                     
                     // Update Students table to set appropriate trip
                     query = "UPDATE Students SET trip = ? WHERE ";
-    
+        
                     for(let i = 0; i < numStudents; i++) {
                         query += "studentID = ? ";
                         studentValues.push(parseInt(req.query.student[i]));
@@ -429,32 +380,17 @@ function updateTrip(req, res, next) {
                     query += ";";
                     
                     pool.query(query, studentValues, function(err, result){
-                        if(err) {
-                            next(err);
-                            return;
-                        }
-    
+                        if(err) { return next(); }
+        
                         context.message = "Trip updated successfully.";
                 
                         // Return to edit page so user can keep working
                         getEditDetails(req, res, next, context);
                     });
                 });
-            })            
-
-        } 
-        // If only features are selected
-        else if(req.query.feature) {
-
-            // Delete existing intersections in Trip_Features table
-            query = "DELETE FROM Trip_Features WHERE tripID = ?;";
-
-            pool.query(query, [req.query.tripID], function(err, result) {
-                if(err) {
-                    next(err);
-                    return;
-                }
-
+            }
+            // If only features are selected
+            else if(req.query.feature) {
                 let numTripFeatures = req.query.feature.length;
                 let tripFeatValues = [];
                         
@@ -472,35 +408,19 @@ function updateTrip(req, res, next) {
                 query += ";";
                 
                 pool.query(query, tripFeatValues, function(err, result){
-                    if(err) {
-                        next(err);
-                        return;
-                    }
+                    if(err) { return next(); }
     
                     context.message = "Trip updated successfully.";
             
                     // Return to edit page so user can keep working
                     getEditDetails(req, res, next, context);
                 });
-            });
-
-
-        } 
-        // If only student is selected
-        else if(req.query.student) {
-            // This means there are no features associated with this trip
-            // So ensure any existing Trip_Features relationships are deleted
-            query = "DELETE FROM Trip_Features WHERE tripID = ?;";
-
-            pool.query(query, [req.query.tripID], function(err, result) {
-                if(err) {
-                    next(err);
-                    return;
-                }
-
+            } 
+            // If only student is selected
+            else if(req.query.student) {
                 let numStudents = req.query.student.length;
                 let studentValues = [ req.query.tripID ];
-                   
+                    
                 // Update student records to show existing trip
                 query = "UPDATE Students SET trip = ? WHERE ";
     
@@ -514,36 +434,23 @@ function updateTrip(req, res, next) {
                 query += ";";
                 
                 pool.query(query, studentValues, function(err, result){
-                    if(err) {
-                        next(err);
-                        return;
-                    }
+                    if(err) { return next(); }
     
                     context.message = "Trip updated successfully.";
             
                     // Return to edit page so user can keep working
                     getEditDetails(req, res, next, context);
                 });
-            });
-        } 
-        // Neither features nor students are selected
-        else {
-            // This means there are no features associated with this trip
-            // So ensure any existing Trip_Features relationships are deleted
-            query = "DELETE FROM Trip_Features WHERE tripID = ?;";
-
-            pool.query(query, [req.query.tripID], function(err, result) {
-                if(err) {
-                    next(err);
-                    return;
-                }
-
+            } 
+            // Neither features nor students are selected
+            else {
                 context.message = "Trip updated successfully.";
 
                 // Return to edit page so user can keep working
                 getEditDetails(req, res, next, context);
-            });
-        }
+            }
+        });
+    
     });
 }
 
