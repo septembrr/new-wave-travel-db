@@ -36,6 +36,7 @@ app.set('port', 9035);
 app.use(express.static('public'));
 
 // Describe Handlebars Helpers
+// Format date - used to make date fit into input, and to display nicely in table
 function formatDate(date, format) {
   if(date) {
     var formattedDate = moment(date);
@@ -43,6 +44,8 @@ function formatDate(date, format) {
   }
 }
 
+// Check if value is in array
+// For persistent checkboxes
 function ifPresentInArray(array, value, options) {
   if(array && array.indexOf(value) >= 0) {
     return options.fn(this);
@@ -77,7 +80,13 @@ app.get('/features', function(req, res, next) {
 });
 
 // Customize Features
-app.get('/customize-feature', require('./includes/features.js').customizeFeatures);
+app.get('/customize-feature', function(req, res, next) {
+  if (req.query.add) {
+    features.addFeature(req, res, next);
+  } else {
+    features.displayCustomizeFeature(req, res, next, {});
+  }
+});
 
 // Customize Trips
 app.get('/customize-trip',function(req, res, next) {

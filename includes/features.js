@@ -4,10 +4,14 @@
 var mysql = require('mysql');
 var pool = mysql.createPool(require('../logins.js'));
 
-// Features
+/*
+DISPLAY FEATURES
+Shows list of features and their associated trips on the main Features list page
+*/
 function displayFeatures(req,res,next, context){
     context.pageTitle = 'Features';
 
+    // Quey all features
     let selectQuery = "SELECT Features.featureID, Features.name, GROUP_CONCAT(Trips.name ORDER BY Trips.name ASC SEPARATOR ', ') as trips FROM Features LEFT JOIN Trip_Features ON Features.featureID = Trip_Features.featureID LEFT JOIN Trips ON Trip_Features.tripID = Trips.tripID GROUP BY Features.name, Features.featureID;";
 
     pool.query(selectQuery, function(err, rows, fields) {
@@ -16,6 +20,7 @@ function displayFeatures(req,res,next, context){
             return;
         }
 
+        // Render feature list
         context.featureList = rows;
         res.render('features', context);
     });
@@ -23,10 +28,14 @@ function displayFeatures(req,res,next, context){
 
 module.exports.displayFeatures = displayFeatures;
 
-// Delete features
+/*
+DELETE FEATURE
+Delete a feature on the Features page
+*/
 function deleteFeature(req, res, next) {
     let context = {};
 
+    // Delete associated intersection table rows from Trip_Features
     let query = "DELETE FROM Trip_Features WHERE featureID = ?;";
 
     pool.query(query, [req.query.featureID], function(err, result) {
@@ -35,6 +44,7 @@ function deleteFeature(req, res, next) {
             return;
         }
 
+        // Delete actual feature from Features table
         query = "DELETE FROM Features WHERE featureID = ?;";
     
         pool.query(query, [req.query.featureID], function(err, result) {
@@ -45,6 +55,7 @@ function deleteFeature(req, res, next) {
     
             context.message = "Feature deleted successfully.";
 
+            // Call displayFeatures to render the page
             displayFeatures(req, res, next, context);
         });
     });
@@ -52,10 +63,14 @@ function deleteFeature(req, res, next) {
 
 module.exports.deleteFeature = deleteFeature;
 
-// Customize Features
-function customizeFeatures (req,res,next){
-    let context = {pageTitle: 'Add Feature'};
+/*
+SHOW THE CUSTOMIZE FEATURE PAGE
+For display of the form on the /customize-feature page, show list of Trips
+*/
+function displayCustomizeFeature (req,res,next,context){
+    context.pageTitle = 'Add Feature';
 
+    // Get list of available trips
     let selectQuery = "SELECT Trips.tripID, Trips.name FROM Trips;";
 
     pool.query(selectQuery, function(err, rows, fields) {
@@ -65,27 +80,44 @@ function customizeFeatures (req,res,next){
         }
         context.tripList = rows;
 
-        // If there is an item to add
-        if (req.query.add) {  
-        let insertQuery = "INSERT INTO Features(name) VALUES(?);";
-        pool.query(insertQuery, [req.query.name], function(err, result) {
-            if(err) {
-                next(err);
-                return;
-            }
+        // Render page
+        res.render('customize-feature', context);
+    });
+    
+}
 
-            // If feature added to any trips
-            if(req.query.trip) {
+module.exports.displayCustomizeFeature = displayCustomizeFeature;
+
+/*
+ADD FEATURE
+After submission on /customize-feature page
+Adding feature to Features table and to Trip_Features intersection table
+*/
+function addFeature(req, res, next) {
+    let context = {};
+
+    // Add new feature to Features table
+    let insertQuery = "INSERT INTO Features(name) VALUES(?);";
+
+    pool.query(insertQuery, [req.query.name], function(err, result) {
+        if(err) {
+            next(err);
+            return;
+        }
+    
+        // If feature added to any trips
+        if(req.query.trip) {
             let numTripFeatures = req.query.trip.length;
             let tripFeatValues = [];
-                    
+            
+            // Add relationships in Trip_Features intersection table
             insertQuery = "INSERT INTO Trip_Features(tripID, featureID) VALUES ";
             for(let i = 0; i < numTripFeatures; i++) {
                 insertQuery += "(?, ?)";
                 tripFeatValues.push(parseInt(req.query.trip[i]));
                 tripFeatValues.push(result.insertId);
                 if(i < numTripFeatures - 1) {
-                insertQuery += ", ";
+                    insertQuery += ", ";
                 }
             }
             insertQuery += ";";
@@ -95,22 +127,22 @@ function customizeFeatures (req,res,next){
                     next(err);
                     return;
                 }
-
+        
                 context.message = "Feature added successfully.";
-
-                res.render('customize-feature', context);
+        
+                // Render the page by calling displayCustomizeFeature
+                displayCustomizeFeature(req, res, next, context);
             });
-            } else {
+        } 
+        // If feature isn't added to any trips
+        else {
             context.message = "Feature added successfully.";
-            res.render('customize-feature', context);
-            }
-        });
 
-        } else {
-        res.render('customize-feature', context);
+            // Render the page by calling displayCustomizeFeature
+            displayCustomizeFeature(req, res, next, context);
         }
     });
-
+    
 }
 
-module.exports.customizeFeatures = customizeFeatures;
+module.exports.addFeature = addFeature;
