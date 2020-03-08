@@ -113,7 +113,7 @@ function updateStudent(req,res,next){
           if(err) { return next(); }
             
             context.message = "Student updated successfully.";
-            students.getStudent(req, res, next, context);
+            getStudent(req, res, next, context);
         });
      })
   })
