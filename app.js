@@ -56,8 +56,14 @@ function ifPresentInArray(array, value, options) {
 
 // Root
 app.get('/',function(req,res,next){
-    let context = {pageTitle: 'Homepage'};
+    let context = {pageTitle: 'New Wave Travel Agency'};
     res.render('index', context);
+});
+
+//Index route
+app.get('/index', function(req, res, next){
+  let context = {pageTitle: 'New Wave Travel Agency'}
+  res.render('index', context);                
 });
 
 // Browse Trips
@@ -105,12 +111,6 @@ app.get('/customize-trip',function(req, res, next) {
   } else {
     trips.displayCustomizeTrip(req, res, next, {pageTitle: 'Add Trip'});
   }
-});
-
-//Index route
-app.get('/index', function(req, res, next){
-  let context = {pageTitle: 'Index'}
-  res.render('index', context);                
 });
 
 //Staff route
