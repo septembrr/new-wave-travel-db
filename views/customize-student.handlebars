@@ -2,8 +2,14 @@
    <div class="container">
       <div class="row">
          <div class="col-sm-12">
-            <h1>Add or Update Student</h1>
-            <p>Add or update a student.</p>
+            {{#if studentInfo}}
+               <h1>Update Student</h1>
+               <p>Update a student.</p>
+            {{else}}
+               <h1>Add Student</h1>
+               <p>Add a student.</p>
+            {{/if}}
+
             {{#if message}}
                <div class="alert alert-success" role="alert">
                {{message}}
