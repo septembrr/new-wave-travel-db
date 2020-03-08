@@ -52,14 +52,14 @@ function displayTrips (req,res,next,context){
     }
 
     pool.query(query, queryArgs, function(err, rows, fields) {
-        if(err) { return next(); }
+        if(err) { return next(err); }
         context.tripList = rows;
 
         // Get list of features for filter list
         query = "SELECT Features.featureID, Features.name FROM Features;";
 
         pool.query(query, function(err, rows, fields) {
-            if(err) { return next(); }
+            if(err) { return next(err); }
             context.featureList = rows;
 
             // Render the trips page
@@ -83,13 +83,13 @@ function deleteTrip(req, res, next) {
         let query = "DELETE FROM Trip_Features WHERE tripID = ?";
 
         pool.query(query, [req.query.tripID], function(err, result){
-            if(err) { return next(); }
+            if(err) { return next(err); }
 
             // Delete from main trips table
             query = "DELETE FROM Trips WHERE tripID = ?";
 
             pool.query(query, [req.query.tripID], function(err, result) {
-                if(err) { return next(); }
+                if(err) { return next(err); }
 
                 let context = {};
                 context.message = "Trip deleted successfully.";
@@ -121,14 +121,14 @@ function displayCustomizeTrip(req,res,next,context){
     let query = "SELECT Students.studentID, Students.name FROM Students WHERE Students.trip IS NULL;";
 
     pool.query(query, function(err, rows, fields) {
-        if(err) { return next(); }
+        if(err) { return next(err); }
         context.studentList = rows;
 
         // Get features for checkboxes
         query = "SELECT Features.featureID, Features.name FROM Features;";
 
         pool.query(query, function(err, rows, fields){
-            if(err) { return next(); }
+            if(err) { return next(err); }
             context.featureList = rows;
 
             // Render the page
@@ -160,7 +160,7 @@ function addTrip(req, res, next) {
     req.query.startDate,
     req.query.endDate
     ], function(err, result) {
-        if(err) { return next(); }
+        if(err) { return next(err); }
 
         let newTripID = result.insertId;
 
@@ -183,7 +183,7 @@ function addTrip(req, res, next) {
             query += ";";
             
             pool.query(query, tripFeatValues, function(err, result){
-                if(err) { return next(); }
+                if(err) { return next(err); }
 
                 let numStudents = req.query.student.length;
                 let studentValues = [ newTripID ];
@@ -201,7 +201,7 @@ function addTrip(req, res, next) {
                 query += ";";
                 
                 pool.query(query, studentValues, function(err, result){
-                    if(err) { return next(); }
+                    if(err) { return next(err); }
 
                     context.message = "Trip added successfully.";
             
@@ -230,7 +230,7 @@ function addTrip(req, res, next) {
             query += ";";
             
             pool.query(query, tripFeatValues, function(err, result){
-                if(err) { return next(); }
+                if(err) { return next(err); }
 
                 context.message = "Trip added successfully.";
         
@@ -257,7 +257,7 @@ function addTrip(req, res, next) {
             query += ";";
             
             pool.query(query, studentValues, function(err, result){
-                if(err) { return next(); }
+                if(err) { return next(err); }
 
                 context.message = "Trip added successfully.";
         
@@ -291,7 +291,7 @@ function getEditDetails(req, res, next, context) {
     let query = "SELECT name, city, country, price, startDate, endDate FROM Trips WHERE tripID = ?";
 
     pool.query(query, [req.query.tripID], function(err, rows, fields){
-        if(err) { return next(); }
+        if(err) { return next(err); }
         if(rows.length > 0) {
             context.tripDetails = rows[0];
         }
@@ -300,7 +300,7 @@ function getEditDetails(req, res, next, context) {
         query = "SELECT featureID FROM Trip_Features WHERE tripID = ?";
 
         pool.query(query, [req.query.tripID], function(err, rows, fields){
-            if(err) { return next(); }
+            if(err) { return next(err); }
 
             context.featuresSelected = [];
             for(let i = 0; i < rows.length; i++) {
@@ -336,13 +336,13 @@ function updateTrip(req, res, next) {
     req.query.endDate,
     req.query.tripID
     ], function(err, result) {
-        if(err) { return next(); }
+        if(err) { return next(err); }
 
         // Delete all existing intersections in Trip_Features table
         query = "DELETE FROM Trip_Features WHERE tripID = ?;";
 
         pool.query(query, [req.query.tripID], function(err, result) {
-            if(err) { return next(); }
+            if(err) { return next(err); }
 
             // If features and students are selected
             if(req.query.feature && req.query.student) {
@@ -362,7 +362,7 @@ function updateTrip(req, res, next) {
                 query += ";";
 
                 pool.query(query, tripFeatValues, function(err, result){
-                    if(err) { return next(); }
+                    if(err) { return next(err); }
         
                     let numStudents = req.query.student.length;
                     let studentValues = [ req.query.tripID ];
@@ -380,7 +380,7 @@ function updateTrip(req, res, next) {
                     query += ";";
                     
                     pool.query(query, studentValues, function(err, result){
-                        if(err) { return next(); }
+                        if(err) { return next(err); }
         
                         context.message = "Trip updated successfully.";
                 
@@ -408,7 +408,7 @@ function updateTrip(req, res, next) {
                 query += ";";
                 
                 pool.query(query, tripFeatValues, function(err, result){
-                    if(err) { return next(); }
+                    if(err) { return next(err); }
     
                     context.message = "Trip updated successfully.";
             
@@ -434,7 +434,7 @@ function updateTrip(req, res, next) {
                 query += ";";
                 
                 pool.query(query, studentValues, function(err, result){
-                    if(err) { return next(); }
+                    if(err) { return next(err); }
     
                     context.message = "Trip updated successfully.";
             
