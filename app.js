@@ -179,7 +179,8 @@ app.get('/customize-staff', function(req, res, next) {
 app.get('/customize-student', function(req, res, next){
   //Prepopulate page if user wants to update a student
   if (req.query.update){
-    students.getStudent(req, res, next);
+    let context = {};
+    students.getStudent(req, res, next, context);
   }
 
   //Send UPDATE to db once user submits update request
