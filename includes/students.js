@@ -46,6 +46,8 @@ function getStudent(req,res,next){
 
    let query = "SELECT Staff.staffID, Staff.name FROM Staff;";
 
+   context.jsscripts = ["selectedTrip.js","selectedStaff.js"];
+
    pool.query(query, function(err, rows, fields){
      if(err){                                                                    
        next(err);
