@@ -4,7 +4,7 @@ Study Abroad Student Management Database
 */
 
 // Required modules
-var express = require('express');                                               // Express 
+var express = require('express');                                      // Express 
 var app = express();
 var handlebars = require('express-handlebars').create({
   defaultLayout:'main',
@@ -14,14 +14,14 @@ var handlebars = require('express-handlebars').create({
   }
 });  // Handlebars template engine
 
-var mysql = require('mysql');                                                   // Mysql to access database
-var pool = mysql.createPool(require('./logins.js'));                            // Mysql login information
+var mysql = require('mysql');                                          // Mysql to access database
+var pool = mysql.createPool(require('./logins.js'));                   // Mysql login information
 
-var bodyParser = require('body-parser');                                        // Body parser for post requests
+var bodyParser = require('body-parser');                               // Body parser for post requests
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-var moment = require('moment');                                                 // Moment.js for date formatting
+var moment = require('moment');                                        // Moment.js for date formatting
 
 // Custom modules
 var trips = require('./includes/trips.js');
