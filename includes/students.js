@@ -38,7 +38,7 @@ GET Student
 Used on /customize-students page to prepopulate the form with the information of a single student
 */
 function getStudent(req,res,next, context){
-   context = {pageTitle: 'Update Student'};
+   context.pageTitle = 'Update Student';
 
    let query = "SELECT Staff.staffID, Staff.name FROM Staff;";
 
