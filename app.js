@@ -56,8 +56,14 @@ function ifPresentInArray(array, value, options) {
 
 // Root
 app.get('/',function(req,res,next){
-    let context = {pageTitle: 'Homepage'};
+    let context = {pageTitle: 'New Wave Travel Agency'};
     res.render('index', context);
+});
+
+//Index route
+app.get('/index', function(req, res, next){
+  let context = {pageTitle: 'New Wave Travel Agency'}
+  res.render('index', context);                
 });
 
 // Browse Trips
@@ -105,12 +111,6 @@ app.get('/customize-trip',function(req, res, next) {
   } else {
     trips.displayCustomizeTrip(req, res, next, {pageTitle: 'Add Trip'});
   }
-});
-
-//Index route
-app.get('/index', function(req, res, next){
-  let context = {pageTitle: 'Index'}
-  res.render('index', context);                
 });
 
 //Staff route
@@ -218,7 +218,7 @@ app.get('/customize-student', function(req, res, next){
       }
 
       //Send UPDATE to db once user submits update request
-      if (req.query.updateStudent){
+      else if (req.query.updateStudent){
         var updateID = req.query.studentID;
         var updateName = req.query.name;
         var updateUniversity = req.query.university;
@@ -246,7 +246,7 @@ app.get('/customize-student', function(req, res, next){
       }
 
       //Add a student to the db
-      if (req.query.add){
+      else if (req.query.add){
         var name = req.query.name;
         var university = req.query.university;
         var phone = req.query.phone;
@@ -272,7 +272,7 @@ app.get('/customize-student', function(req, res, next){
       }
 
       //Default customize-student page
-      else{
+      else {
         res.render('customize-student', context);
       }
 
