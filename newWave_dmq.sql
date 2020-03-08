@@ -3,9 +3,17 @@
 -- New Wave Travel Agency
 
 -- get all Students, including Staff and trip if applicable, for the Students page
-SELECT Students.studentID, Students.name AS studentName, Students.university, Students.phone, Students.email, Trips.name AS tripsName, Staff.name AS staffName FROM Students 
+SELECT Students.studentID, Students.name AS studentName, Students.university, Students.phone, Students.email, Trips.name AS tripsName, Staff.name AS staffName 
+    FROM Students 
     LEFT JOIN Trips ON Students.trip = Trips.tripID 
     LEFT JOIN Staff ON Students.staff = Staff.staffID;
+
+-- get information for a single student, including staff and trip if applicable, for customize-student page.
+SELECT Students.studentID, Students.name AS studentName, Students.university, Students.phone, Students.email, Students.staff, Students.trip, Trips.name AS tripsName, Staff.name AS staffName 
+    FROM Students 
+    LEFT JOIN Trips ON Students.trip = Trips.tripID 
+    LEFT JOIN Staff ON Students.staff = Staff.staffID 
+    WHERE Students.studentID = :student_ID_input;
 
 -- get all Staff for the Staff page
 SELECT Staff.name, Staff.phone, Staff.email, Staff.type FROM Staff;
