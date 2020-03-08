@@ -176,108 +176,25 @@ app.get('/customize-staff', function(req, res, next) {
 
 //Customize-student page
 app.get('/customize-student', function(req, res, next){
-  let context = {pageTitle: 'Add or Update Student'};
+  //Prepopulate page if user wants to update a student
+  if (req.query.update){
+    students.getStudent(req, res, next);
+  }
 
-  let query = "SELECT Staff.staffID, Staff.name FROM Staff;";
+  //Send UPDATE to db once user submits update request
+  else if (req.query.updateStudent){
+    students.updateStudent(req, res, next);
+  }
 
-  pool.query(query, function(err, rows, fields){
-    if(err){                                                                    
-      next(err);
-      return;
-    }
-    context.staffList = rows;
+  //Add a student to the db
+  else if (req.query.add){
+    students.addStudent(req, res, next);
+  }
 
-    query = "SELECT Trips.tripID, Trips.name FROM Trips;";
-
-    pool.query(query, function(err, rows, fields){
-      if(err){                                                                    
-        next(err);
-        return;
-      }
-
-      context.tripList = rows;
-
-      //Prepopulate page if user wants to update a student
-      if (req.query.update){
-        var currStudent = req.query.studentID;
-
-        query = "SELECT Students.studentID, Students.name AS studentName, Students.university, Students.phone, Students.email, Students.staff, Students.trip, Trips.name AS tripsName, Staff.name AS staffName FROM Students LEFT JOIN Trips ON Students.trip = Trips.tripID LEFT JOIN Staff ON Students.staff = Staff.staffID WHERE Students.studentID = ?;";
-
-        pool.query(query, [currStudent], function(err, rows, fields){
-          if(err){
-            next(err);
-            return;
-          }
-
-          context.studentInfo = rows[0];
-
-          context.jsscripts = ["selectedStaff.js", "selectedTrip.js"];
-          
-          res.render('customize-student', context);
-        });
-      }
-
-      //Send UPDATE to db once user submits update request
-      if (req.query.updateStudent){
-        var updateID = req.query.studentID;
-        var updateName = req.query.name;
-        var updateUniversity = req.query.university;
-        var updatePhone = req.query.phone;
-        var updateEmail = req.query.email;
-        var updateTrip = req.query.trip;
-        if(updateTrip == "NULL"){
-          updateTrip = null;
-        }
-        var updateStaff = req.query.staff;
-        if(updateStaff == "NULL"){
-          updateStaff = null;
-        }
-
-        var sql = "UPDATE TABLE Students SET name = ?, university = ?, phone = ?, email = ?, trip = ?, staff = ? WHERE studentID = ?;";
-        pool.query(sql, [updateName, updateUniversity, updatePhone, updateEmail, updateTrip, updateStaff, updateID], function (err) {
-          if(err){                                                                    
-            next(err);
-            return;}
-            
-            context.message = "Student updated successfully.";
-            res.render('students', context);
-        });
-
-      }
-
-      //Add a student to the db
-      if (req.query.add){
-        var name = req.query.name;
-        var university = req.query.university;
-        var phone = req.query.phone;
-        var email = req.query.email;
-        var trip = req.query.trip;
-        if(trip == "NULL"){
-          trip = null;
-        }
-
-        var staff = req.query.staff;
-        if(staff == "NULL"){
-          staff = null;
-        }
-    
-        var sql = "INSERT INTO Students (name, university, phone, email, trip, staff) VALUES (?, ?, ?, ?, ?, ?);";
-        pool.query(sql, [name, university, phone, email, trip, staff], function (err) {
-          if(err){                                                                    
-            next(err);
-            return;}
-            context.message = "Student added successfully.";
-            res.render('customize-student', context);
-          });
-      }
-
-      //Default customize-student page
-      else{
-        res.render('customize-student', context);
-      }
-
-    })
-  })
+  //Default customize-student page
+  else{
+    students.customizePage(req, res, next);
+  }
 });
 
 // 404 Page Not Found Error
