@@ -31,7 +31,7 @@ var students = require('./includes/students.js');
 // Set up express to use handlebars and appropriate PORT
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
-app.set('port', 9035);
+app.set('port', 9036);
 
 // Set public folder
 app.use(express.static('public'));
