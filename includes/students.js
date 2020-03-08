@@ -8,7 +8,7 @@ var pool = mysql.createPool(require('../logins.js'));
 DISPLAY customize-students
 Used on /customize-students to display default page
 */
-function customizePage(req, res, next, context){
+function customizePage(req, res, next){
    let context = {pageTitle: 'Add or Update Student'};
 
    let query = "SELECT Staff.staffID, Staff.name FROM Staff;";
@@ -41,7 +41,7 @@ module.exports.customizePage = customizePage;
 GET Student
 Used on /customize-students page to prepopulate the form with the information of a single student
 */
-function getStudent(req,res,next,context){
+function getStudent(req,res,next){
    let context = {pageTitle: 'Update Student'};
 
    let query = "SELECT Staff.staffID, Staff.name FROM Staff;";
@@ -89,7 +89,7 @@ module.exports.getStudent = getStudent;
 UPDATE Students
 Used on /customize-students page to update the chosen student
 */
-function updateStudent(req,res,next,context){
+function updateStudent(req,res,next){
    let context = {};
 
    let query = "SELECT Staff.staffID, Staff.name FROM Staff;";
@@ -145,7 +145,7 @@ module.exports.updateStudent = updateStudent;
 ADD Students
 Used on /customize-students page to show list of all students
 */
-function addStudent(req,res,next,context){
+function addStudent(req,res,next){
    let context = {pageTitle: 'Add Student'};
 
    let query = "SELECT Staff.staffID, Staff.name FROM Staff;";
