@@ -15,7 +15,7 @@ function displayFeatures(req,res,next, context){
     let selectQuery = "SELECT Features.featureID, Features.name, GROUP_CONCAT(Trips.name ORDER BY Trips.name ASC SEPARATOR ', ') as trips FROM Features LEFT JOIN Trip_Features ON Features.featureID = Trip_Features.featureID LEFT JOIN Trips ON Trip_Features.tripID = Trips.tripID GROUP BY Features.name, Features.featureID;";
 
     pool.query(selectQuery, function(err, rows, fields) {
-        if(err) { return next(err); }
+        if(err) { return next(); }
 
         // Render feature list
         context.featureList = rows;
@@ -36,13 +36,13 @@ function deleteFeature(req, res, next) {
     let query = "DELETE FROM Trip_Features WHERE featureID = ?;";
 
     pool.query(query, [req.query.featureID], function(err, result) {
-        if(err) { return next(err); }
+        if(err) { return next(); }
 
         // Delete actual feature from Features table
         query = "DELETE FROM Features WHERE featureID = ?;";
     
         pool.query(query, [req.query.featureID], function(err, result) {
-            if(err) { return next(err); }
+            if(err) { return next(); }
     
             context.message = "Feature deleted successfully.";
 
@@ -65,7 +65,7 @@ function displayCustomizeFeature (req,res,next,context){
     let selectQuery = "SELECT Trips.tripID, Trips.name FROM Trips;";
 
     pool.query(selectQuery, function(err, rows, fields) {
-        if(err) { return next(err); }
+        if(err) { return next(); }
 
         context.tripList = rows;
 
@@ -89,7 +89,7 @@ function addFeature(req, res, next) {
     let insertQuery = "INSERT INTO Features(name) VALUES(?);";
 
     pool.query(insertQuery, [req.query.name], function(err, result) {
-        if(err) { return next(err); }
+        if(err) { return next(); }
     
         // If feature added to any trips
         if(req.query.trip) {
@@ -109,7 +109,7 @@ function addFeature(req, res, next) {
             insertQuery += ";";
             
             pool.query(insertQuery, tripFeatValues, function(err, result){
-                if(err) { return next(err); }
+                if(err) { return next(); }
         
                 context.message = "Feature added successfully.";
         
