@@ -26,7 +26,7 @@ var moment = require('moment');                                                 
 // Custom modules
 var trips = require('./includes/trips.js');
 var features = require('./includes/features.js');
-var students = require('./includes/features.js');
+var students = require('./includes/students.js');
 
 // Set up express to use handlebars and appropriate PORT
 app.engine('handlebars', handlebars.engine);
