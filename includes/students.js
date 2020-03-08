@@ -14,19 +14,15 @@ function customizePage(req, res, next){
    let query = "SELECT Staff.staffID, Staff.name FROM Staff;";
 
    pool.query(query, function(err, rows, fields){
-      if(err){                                                                    
-      next(err);
-      return;
-   }
+    if(err) { return next(err); }
+   
    context.staffList = rows;
 
    query = "SELECT Trips.tripID, Trips.name FROM Trips;";
 
       pool.query(query, function(err, rows, fields){
-         if(err){                                                                    
-         next(err);
-         return;
-      }
+        if(err) { return next(err); }
+      
 
       context.tripList = rows;
    
@@ -49,19 +45,13 @@ function getStudent(req,res,next){
    context.jsscripts = ["selectedTrip.js","selectedStaff.js"];
 
    pool.query(query, function(err, rows, fields){
-     if(err){                                                                    
-       next(err);
-       return;
-     }
+    if(err) { return next(err); }
      context.staffList = rows;
  
      query = "SELECT Trips.tripID, Trips.name FROM Trips;";
  
      pool.query(query, function(err, rows, fields){
-       if(err){                                                                    
-         next(err);
-         return;
-       }
+      if(err) { return next(err); }
  
        context.tripList = rows;
 
@@ -70,10 +60,7 @@ function getStudent(req,res,next){
         query = "SELECT Students.studentID, Students.name AS studentName, Students.university, Students.phone, Students.email, Students.staff, Students.trip, Trips.name AS tripsName, Staff.name AS staffName FROM Students LEFT JOIN Trips ON Students.trip = Trips.tripID LEFT JOIN Staff ON Students.staff = Staff.staffID WHERE Students.studentID = ?;";
 
         pool.query(query, [currStudent], function(err, rows, fields){
-          if(err){
-            next(err);
-            return;
-          }
+          if(err) { return next(err); }
 
           context.studentInfo = rows[0];
 
@@ -97,19 +84,13 @@ function updateStudent(req,res,next){
    let query = "SELECT Staff.staffID, Staff.name FROM Staff;";
 
    pool.query(query, function(err, rows, fields){
-     if(err){                                                                    
-       next(err);
-       return;
-     }
+    if(err) { return next(err); }
      context.staffList = rows;
  
      query = "SELECT Trips.tripID, Trips.name FROM Trips;";
  
      pool.query(query, function(err, rows, fields){
-       if(err){                                                                    
-         next(err);
-         return;
-       }
+      if(err) { return next(err); }
  
        context.tripList = rows;
 
@@ -129,9 +110,7 @@ function updateStudent(req,res,next){
 
         var sql = "UPDATE Students SET name = ?, university = ?, phone = ?, email = ?, trip = ?, staff = ? WHERE studentID = ?;";
         pool.query(sql, [updateName, updateUniversity, updatePhone, updateEmail, updateTrip, updateStaff, updateID], function (err) {
-          if(err){                                                                    
-            next(err);
-            return;}
+          if(err) { return next(err); }
             
             context.message = "Student updated successfully.";
             res.render('students', context);
@@ -153,19 +132,13 @@ function addStudent(req,res,next){
    let query = "SELECT Staff.staffID, Staff.name FROM Staff;";
 
    pool.query(query, function(err, rows, fields){
-     if(err){                                                                    
-       next(err);
-       return;
-     }
+    if(err) { return next(err); }
      context.staffList = rows;
  
      query = "SELECT Trips.tripID, Trips.name FROM Trips;";
  
      pool.query(query, function(err, rows, fields){
-       if(err){                                                                    
-         next(err);
-         return;
-       }
+      if(err) { return next(err); }
  
        context.tripList = rows;
 
@@ -185,9 +158,7 @@ function addStudent(req,res,next){
     
         var sql = "INSERT INTO Students (name, university, phone, email, trip, staff) VALUES (?, ?, ?, ?, ?, ?);";
         pool.query(sql, [name, university, phone, email, trip, staff], function (err) {
-          if(err){                                                                    
-            next(err);
-            return;}
+          if(err) { return next(err); }
             context.message = "Student added successfully.";
             res.render('customize-student', context);
           });
