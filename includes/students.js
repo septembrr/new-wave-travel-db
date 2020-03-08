@@ -37,8 +37,8 @@ module.exports.customizePage = customizePage;
 GET Student
 Used on /customize-students page to prepopulate the form with the information of a single student
 */
-function getStudent(req,res,next){
-   let context = {pageTitle: 'Update Student'};
+function getStudent(req,res,next, context){
+   context = {pageTitle: 'Update Student'};
 
    let query = "SELECT Staff.staffID, Staff.name FROM Staff;";
 
@@ -113,7 +113,7 @@ function updateStudent(req,res,next){
           if(err) { return next(); }
             
             context.message = "Student updated successfully.";
-            res.render('students', context);
+            students.getStudent(req, res, next, context);
         });
      })
   })
