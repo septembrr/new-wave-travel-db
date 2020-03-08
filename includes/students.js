@@ -127,7 +127,7 @@ function updateStudent(req,res,next){
           updateStaff = null;
         }
 
-        var sql = "UPDATE TABLE Students SET name = ?, university = ?, phone = ?, email = ?, trip = ?, staff = ? WHERE studentID = ?;";
+        var sql = "UPDATE Students SET name = ?, university = ?, phone = ?, email = ?, trip = ?, staff = ? WHERE studentID = ?;";
         pool.query(sql, [updateName, updateUniversity, updatePhone, updateEmail, updateTrip, updateStaff, updateID], function (err) {
           if(err){                                                                    
             next(err);
