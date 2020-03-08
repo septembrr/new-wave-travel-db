@@ -20,7 +20,7 @@
                      <div class="form-group">
                         <label class="sr-only" for="name">Name</label>
                         {{#if studentInfo}}
-                           <input type="text" id="name" name="name" class="form-control" value={{this.studentName}} required />
+                           <input type="text" id="name" name="name" class="form-control" value="{{studentName}}" required />
                         {{else}}
                            <input type="text" id="name" name="name" class="form-control" placeholder="Name*" required />
                         {{/if}}
@@ -30,7 +30,7 @@
                      <div class="form-group">
                         <label class="sr-only" for="university">University</label>
                         {{#if studentInfo}}
-                           <input type="text" id="university" name="university" class="form-control" value={{this.university}} required />
+                           <input type="text" id="university" name="university" class="form-control" value="{{university}}" required />
                         {{else}}
                            <input type="text" id="university" name="university" class="form-control" placeholder="University*" required />
                         {{/if}}
@@ -40,7 +40,7 @@
                      <div class="form-group">
                         <label class="sr-only" for="phone">Phone</label>
                         {{#if studentInfo}}
-                           <input type="text" id="phone" name="phone" class="form-control" value={{this.phone}} required />
+                           <input type="text" id="phone" name="phone" class="form-control" value="{{phone}}" required />
                         {{else}}
                            <input type="text" id="phone" name="phone" class="form-control" placeholder="Phone*" required />
                         {{/if}}
@@ -50,7 +50,7 @@
                      <div class="form-group">
                         <label class="sr-only" for="email">Email</label>
                         {{#if studentInfo}}
-                           <input type="text" id="email" name="email" class="form-control" value={{this.phone}} required />
+                           <input type="text" id="email" name="email" class="form-control" value="{{email}}" required />
                         {{else}}
                            <input type="text" id="email" name="email" class="form-control" placeholder="Email*" required />
                         {{/if}}
@@ -84,7 +84,7 @@
                <div class="row">
                   <div class="form-group">
                      {{#if studentInfo}}
-                     <input type="hidden" name="studentID" value="{{this.studentID}}">
+                     <input type="hidden" name="studentID" value="{{studentID}}">
                      <input type="submit" name="updateStudent" value="Update" class="btn btn-primary" />
                      {{else}}
                      <input type="submit" name="add" value="Add" class="btn btn-primary" />
