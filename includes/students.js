@@ -116,7 +116,7 @@ function updateStudent(req,res,next){
             res.render('students', context);
         });
      })
-   })
+  })
 }
 
 module.exports.updateStudent = updateStudent;

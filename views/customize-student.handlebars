@@ -84,7 +84,7 @@
                <div class="row">
                   <div class="form-group">
                      {{#if studentInfo}}
-                     <input type="hidden" name="studentID" value="{{studentID}}">
+                     <input type="hidden" name="studentID" value="{{studentInfo.studentID}}">
                      <input type="submit" name="updateStudent" value="Update" class="btn btn-primary" />
                      {{else}}
                      <input type="submit" name="add" value="Add" class="btn btn-primary" />
