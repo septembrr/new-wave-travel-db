@@ -154,7 +154,7 @@ app.get('/customize-staff', function(req, res, next) {
     var role = req.query.role;
 
     var sql = "INSERT INTO Staff (name, phone, email, type) VALUES (?, ?, ?, ?);";
-    pool.query(query, [name, phone, email, role], function (err) {
+    pool.query(sql, [name, phone, email, role], function (err) {
       if(err){                                                                    
         next(err);
         return;}
