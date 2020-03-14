@@ -29,7 +29,7 @@ DROP TABLE IF EXISTS Trips;
 
 CREATE TABLE Trips (
   tripID int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  name varchar(255) NOT NULL,
+  name varchar(255) UNIQUE NOT NULL,
   city varchar(255) NOT NULL,
   country varchar(20) NOT NULL,
   price float(11) NOT NULL,
@@ -81,7 +81,7 @@ DROP TABLE IF EXISTS Features;
 
 CREATE TABLE Features (
   featureID int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  name varchar(255) NOT NULL
+  name varchar(255) UNIQUE NOT NULL
 )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 --
