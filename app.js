@@ -17,10 +17,6 @@ var handlebars = require('express-handlebars').create({
 var mysql = require('mysql');                                          // Mysql to access database
 var pool = mysql.createPool(require('./logins.js'));                   // Mysql login information
 
-var bodyParser = require('body-parser');                               // Body parser for post requests
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-
 var moment = require('moment');                                        // Moment.js for date formatting
 
 // Custom modules
@@ -156,7 +152,6 @@ app.get('/customize-staff', function(req, res, next) {
     var sql = "INSERT INTO Staff (name, phone, email, type) VALUES (?, ?, ?, ?);";
     pool.query(sql, [name, phone, email, role], function (err) {
       if(err){                                                                    
-<<<<<<< HEAD
         context.errorMessage = "ERROR: Staff not added successfully.";
         res.render('customize-staff', context);
         return;
@@ -164,13 +159,6 @@ app.get('/customize-staff', function(req, res, next) {
 
       context.message = "Staff added successfully.";
       res.render('customize-staff', context);
-=======
-        next(err);
-        return;
-      }
-        context.message = "Staff added successfully.";
-        res.render('customize-staff', context);
->>>>>>> c21f45442a332a1b446baa88affc82268d6ec40c
     });
   }
 
