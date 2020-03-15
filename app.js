@@ -157,10 +157,11 @@ app.get('/customize-staff', function(req, res, next) {
     pool.query(sql, [name, phone, email, role], function (err) {
       if(err){                                                                    
         next(err);
-        return;}
+        return;
+      }
         context.message = "Staff added successfully.";
         res.render('customize-staff', context);
-      });
+    });
   }
 
   else{
