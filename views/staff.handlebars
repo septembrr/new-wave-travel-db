@@ -5,6 +5,11 @@
                <h1>Staff</h1>
                <p>This is our staff directory. Here you can find the contact information for our staff members.</p>
                <p>Want to add a new staff member to our directory? <a href="/customize-staff"> You can add new staff member information here.</a></p>
+               {{#if errorMessage}}
+                  <div class="alert alert-danger" role="alert">
+                     {{errorMessage}}
+                  </div>
+               {{/if}}
                <br>
             </div>
          </div>

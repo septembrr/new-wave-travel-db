@@ -36,14 +36,26 @@ function deleteFeature(req, res, next) {
     let query = "DELETE FROM Trip_Features WHERE featureID = ?;";
 
     pool.query(query, [req.query.featureID], function(err, result) {
-        if(err) { return next(); }
+        if(err) {
+            context.errorMessage = "ERROR: Feature not deleted successfully.";
+
+            // Call displayFeatures to render the page
+            displayFeatures(req, res, next, context);
+            return;
+        }
 
         // Delete actual feature from Features table
         query = "DELETE FROM Features WHERE featureID = ?;";
     
         pool.query(query, [req.query.featureID], function(err, result) {
-            if(err) { return next(); }
-    
+            if(err) {
+                context.errorMessage = "ERROR: Feature not deleted successfully.";
+
+                // Call displayFeatures to render the page
+                displayFeatures(req, res, next, context);
+                return;
+            }
+
             context.message = "Feature deleted successfully.";
 
             // Call displayFeatures to render the page
@@ -89,8 +101,14 @@ function addFeature(req, res, next) {
     let insertQuery = "INSERT INTO Features(name) VALUES(?);";
 
     pool.query(insertQuery, [req.query.name], function(err, result) {
-        if(err) { return next(); }
-    
+        if(err) {
+            context.errorMessage = "ERROR: Feature not added successfully.";
+        
+            // Call displayFeatures to render the page
+            displayFeatures(req, res, next, context);
+            return;
+        }
+
         // If feature added to any trips
         if(req.query.trip) {
             let numTripFeatures = req.query.trip.length;
@@ -109,8 +127,14 @@ function addFeature(req, res, next) {
             insertQuery += ";";
             
             pool.query(insertQuery, tripFeatValues, function(err, result){
-                if(err) { return next(); }
-        
+                if(err) {
+                    context.errorMessage = "ERROR: Feature not added successfully.";
+    
+                    // Call displayFeatures to render the page
+                    displayFeatures(req, res, next, context);
+                    return;
+                }
+
                 context.message = "Feature added successfully.";
         
                 // Render the page by calling displayCustomizeFeature
@@ -125,7 +149,6 @@ function addFeature(req, res, next) {
             displayCustomizeFeature(req, res, next, context);
         }
     });
-    
 }
 
 module.exports.addFeature = addFeature;

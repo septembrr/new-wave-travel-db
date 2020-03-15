@@ -9,6 +9,11 @@
                     {{message}}
                 </div>
             {{/if}}
+            {{#if errorMessage}}
+                <div class="alert alert-danger" role="alert">
+                    {{errorMessage}}
+                </div>
+            {{/if}}
             <br>
         </div>
     </div>

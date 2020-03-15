@@ -100,6 +100,7 @@ function updateStudent(req,res,next){
         var updatePhone = req.query.phone;
         var updateEmail = req.query.email;
         var updateTrip = req.query.trip;
+
         if(updateTrip == "NULL"){
           updateTrip = null;
         }
@@ -110,10 +111,13 @@ function updateStudent(req,res,next){
 
         var sql = "UPDATE Students SET name = ?, university = ?, phone = ?, email = ?, trip = ?, staff = ? WHERE studentID = ?;";
         pool.query(sql, [updateName, updateUniversity, updatePhone, updateEmail, updateTrip, updateStaff, updateID], function (err) {
-          if(err) { return next(); }
-            
+          if(err) {
+            context.errorMessage = "ERROR: Student not updated successfully.";
+            getStudent(req, res, next, context);
+          } else {
             context.message = "Student updated successfully.";
             getStudent(req, res, next, context);
+          }
         });
      })
   })
@@ -140,13 +144,14 @@ function addStudent(req,res,next){
      pool.query(query, function(err, rows, fields){
       if(err) { return next(); }
  
-       context.tripList = rows;
+        context.tripList = rows;
 
-   var name = req.query.name;
+        var name = req.query.name;
         var university = req.query.university;
         var phone = req.query.phone;
         var email = req.query.email;
         var trip = req.query.trip;
+
         if(trip == "NULL"){
           trip = null;
         }
@@ -158,10 +163,14 @@ function addStudent(req,res,next){
     
         var sql = "INSERT INTO Students (name, university, phone, email, trip, staff) VALUES (?, ?, ?, ?, ?, ?);";
         pool.query(sql, [name, university, phone, email, trip, staff], function (err) {
-          if(err) { return next(); }
+          if(err) {
+            context.errorMessage = "ERROR: Student not added successfully.";
+            res.render('customize-student', context);
+          } else {
             context.message = "Student added successfully.";
             res.render('customize-student', context);
-          });
+          }
+        });
       })
    })
 }

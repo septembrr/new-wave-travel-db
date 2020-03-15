@@ -31,7 +31,7 @@ var students = require('./includes/students.js');
 // Set up express to use handlebars and appropriate PORT
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
-app.set('port', 9036);
+app.set('port', 9037);
 
 // Set public folder
 app.use(express.static('public'));
@@ -113,16 +113,16 @@ app.get('/staff', function(req, res, next){
 
   //Get our elements in the database 
   pool.query('SELECT Staff.name, Staff.phone, Staff.email, Staff.type FROM Staff', function(err, rows, fields){           
-  if(err){                                                                    
-      next(err);
-      return;
-  }
+    if(err){                                                                    
+        next(err);
+        return;
+    }
 
-  context.results = rows;
+    context.results = rows;
 
-  //Display the table
-  res.render('staff', context);                
-  })
+    //Display the table
+    res.render('staff', context);                
+  });
 });
 
 //Students route
@@ -131,16 +131,16 @@ app.get('/students', function(req, res, next){
 
   //Get our elements in the database 
   pool.query('SELECT Students.studentID, Students.name AS studentName, Students.university, Students.phone, Students.email, Trips.name AS tripsName, Staff.name AS staffName FROM Students LEFT JOIN Trips ON Students.trip = Trips.tripID LEFT JOIN Staff ON Students.staff = Staff.staffID', function(err, rows, fields){           
-  if(err){                                                                    
-      next(err);
-      return;
-  }
+    if(err){                                                                    
+        next(err);
+        return;
+    }
 
-  context.results = rows;
+    context.results = rows;
 
-  //Display the table
-  res.render('students', context);                
-  })
+    //Display the table
+    res.render('students', context);                
+  });
 });
 
 //Insert new staff into DB via GET 
@@ -156,14 +156,17 @@ app.get('/customize-staff', function(req, res, next) {
     var sql = "INSERT INTO Staff (name, phone, email, type) VALUES (?, ?, ?, ?);";
     pool.query(sql, [name, phone, email, role], function (err) {
       if(err){                                                                    
-        next(err);
-        return;}
-        context.message = "Staff added successfully.";
+        context.errorMessage = "ERROR: Staff not added successfully.";
         res.render('customize-staff', context);
-      });
+        return;
+      }
+
+      context.message = "Staff added successfully.";
+      res.render('customize-staff', context);
+    });
   }
 
-  else{
+  else {
     res.render('customize-staff', context);
   }
 });

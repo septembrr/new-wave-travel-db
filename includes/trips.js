@@ -76,6 +76,9 @@ DELETE TRIP
 Used on main /trips page when the delete button is clicked
 */
 function deleteTrip(req, res, next) {
+
+    let context = {};
+
     // If tripID present
     if(req.query.tripID) {
 
@@ -83,15 +86,25 @@ function deleteTrip(req, res, next) {
         let query = "DELETE FROM Trip_Features WHERE tripID = ?";
 
         pool.query(query, [req.query.tripID], function(err, result){
-            if(err) { return next(); }
+            if(err) {
+                context.errorMessage = "ERROR: Trip not deleted successfully.";
+
+                // Call displayCustomizeTrip to render the page
+                displayTrips(req, res, next, context);
+                return;
+            } 
 
             // Delete from main trips table
             query = "DELETE FROM Trips WHERE tripID = ?";
 
             pool.query(query, [req.query.tripID], function(err, result) {
-                if(err) { return next(); }
+                if(err) {
+                    context.errorMessage = "ERROR: Trip not deleted successfully.";
+                    // Call displayCustomizeTrip to render the page
+                    displayTrips(req, res, next, context);
+                    return;
+                } 
 
-                let context = {};
                 context.message = "Trip deleted successfully.";
 
                 // Call displayTrips to render the page
@@ -160,7 +173,14 @@ function addTrip(req, res, next) {
     req.query.startDate,
     req.query.endDate
     ], function(err, result) {
-        if(err) { return next(); }
+        if(err) {
+            context.errorMessage = "ERROR: Trip not added successfully.";
+
+            // Call displayCustomizeTrip to render the page
+            displayCustomizeTrip(req, res, next, context);
+            return;
+
+        }
 
         let newTripID = result.insertId;
 
@@ -183,7 +203,13 @@ function addTrip(req, res, next) {
             query += ";";
             
             pool.query(query, tripFeatValues, function(err, result){
-                if(err) { return next(); }
+                if(err) {
+                    context.errorMessage = "ERROR: Trip not added successfully.";
+
+                    // Call displayCustomizeTrip to render the page
+                    displayCustomizeTrip(req, res, next, context);
+                    return;
+                }
 
                 let numStudents = req.query.student.length;
                 let studentValues = [ newTripID ];
@@ -201,7 +227,13 @@ function addTrip(req, res, next) {
                 query += ";";
                 
                 pool.query(query, studentValues, function(err, result){
-                    if(err) { return next(); }
+                    if(err) {
+                        context.errorMessage = "ERROR: Trip not added successfully.";
+
+                        // Call displayCustomizeTrip to render the page
+                        displayCustomizeTrip(req, res, next, context);
+                        return;
+                    }
 
                     context.message = "Trip added successfully.";
             
@@ -209,13 +241,12 @@ function addTrip(req, res, next) {
                     displayCustomizeTrip(req, res, next, context);
                 });
             });
-
         } 
         // If only features are selected
         else if(req.query.feature) {
             let numTripFeatures = req.query.feature.length;
             let tripFeatValues = [];
-                 
+                    
             // Insert into Trip_Features intersection table
             query = "INSERT INTO Trip_Features(tripID, featureID) VALUES ";
 
@@ -230,14 +261,19 @@ function addTrip(req, res, next) {
             query += ";";
             
             pool.query(query, tripFeatValues, function(err, result){
-                if(err) { return next(); }
+                if(err) {
+                    context.errorMessage = "ERROR: Trip not added successfully.";
+
+                    // Call displayCustomizeTrip to render the page
+                    displayCustomizeTrip(req, res, next, context);
+                    return;
+                }
 
                 context.message = "Trip added successfully.";
         
                 // Call displayCustomizeTrip to render the page
                 displayCustomizeTrip(req, res, next, context);
             });
-
         } 
         // Only students selected
         else if(req.query.student) {
@@ -257,7 +293,13 @@ function addTrip(req, res, next) {
             query += ";";
             
             pool.query(query, studentValues, function(err, result){
-                if(err) { return next(); }
+                if(err) {
+                    context.errorMessage = "ERROR: Trip not added successfully.";
+
+                    // Call displayCustomizeTrip to render the page
+                    displayCustomizeTrip(req, res, next, context);
+                    return;
+                }
 
                 context.message = "Trip added successfully.";
         
@@ -336,13 +378,25 @@ function updateTrip(req, res, next) {
     req.query.endDate,
     req.query.tripID
     ], function(err, result) {
-        if(err) { return next(); }
+        if(err) {
+            context.errorMessage = "ERROR: Trip not updated successfully.";
+                
+            // Return to edit page so user can keep working
+            getEditDetails(req, res, next, context);
+            return;
+        }
 
         // Delete all existing intersections in Trip_Features table
         query = "DELETE FROM Trip_Features WHERE tripID = ?;";
 
         pool.query(query, [req.query.tripID], function(err, result) {
-            if(err) { return next(); }
+            if(err) {
+                context.errorMessage = "ERROR: Trip not updated successfully.";
+                
+                // Return to edit page so user can keep working
+                getEditDetails(req, res, next, context);
+                return;
+            }
 
             // If features and students are selected
             if(req.query.feature && req.query.student) {
@@ -362,8 +416,14 @@ function updateTrip(req, res, next) {
                 query += ";";
 
                 pool.query(query, tripFeatValues, function(err, result){
-                    if(err) { return next(); }
-        
+                    if(err) {
+                        context.errorMessage = "ERROR: Trip not updated successfully.";
+                
+                        // Return to edit page so user can keep working
+                        getEditDetails(req, res, next, context);
+                        return;
+                    }
+
                     let numStudents = req.query.student.length;
                     let studentValues = [ req.query.tripID ];
                     
@@ -380,8 +440,14 @@ function updateTrip(req, res, next) {
                     query += ";";
                     
                     pool.query(query, studentValues, function(err, result){
-                        if(err) { return next(); }
-        
+                        if(err) {
+                            context.errorMessage = "ERROR: Trip not updated successfully.";
+                
+                            // Return to edit page so user can keep working
+                            getEditDetails(req, res, next, context);
+                            return;
+                        }
+
                         context.message = "Trip updated successfully.";
                 
                         // Return to edit page so user can keep working
@@ -408,8 +474,14 @@ function updateTrip(req, res, next) {
                 query += ";";
                 
                 pool.query(query, tripFeatValues, function(err, result){
-                    if(err) { return next(); }
-    
+                    if(err) {
+                        context.errorMessage = "ERROR: Trip not updated successfully.";
+            
+                        // Return to edit page so user can keep working
+                        getEditDetails(req, res, next, context);
+                        return;
+                    }
+
                     context.message = "Trip updated successfully.";
             
                     // Return to edit page so user can keep working
@@ -434,8 +506,14 @@ function updateTrip(req, res, next) {
                 query += ";";
                 
                 pool.query(query, studentValues, function(err, result){
-                    if(err) { return next(); }
-    
+                    if(err) {
+                        context.errorMessage = "ERROR: Trip not updated successfully.";
+            
+                        // Return to edit page so user can keep working
+                        getEditDetails(req, res, next, context);
+                        return;
+                    }
+                    
                     context.message = "Trip updated successfully.";
             
                     // Return to edit page so user can keep working
@@ -450,7 +528,6 @@ function updateTrip(req, res, next) {
                 getEditDetails(req, res, next, context);
             }
         });
-    
     });
 }
 
